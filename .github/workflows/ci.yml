@@ -100,10 +100,31 @@ jobs:
           bench set-config -g redis_queue "$REDIS_QUEUE"
           bench set-config -g redis_socketio "$REDIS_QUEUE"
 
+      - name: Cache Yarn
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/yarn
+          key: yarn-${{ runner.os }}-v1
+          restore-keys: |
+            yarn-${{ runner.os }}-
+
+      - name: Configure Yarn
+        run: |
+          yarn config set network-timeout 600000
+          yarn config set network-concurrency 1
+
       - name: Get ERPNext (required by itemflow)
         run: |
           cd frappe-bench
-          bench get-app erpnext --branch version-16
+          for attempt in 1 2 3 4 5; do
+            echo "Attempt $attempt: bench get-app erpnext"
+            if bench get-app erpnext --branch version-16 --overwrite; then
+              exit 0
+            fi
+            rm -rf apps/erpnext
+            sleep $((attempt * 20))
+          done
+          exit 1
 
       - name: Link app into bench
         run: |
