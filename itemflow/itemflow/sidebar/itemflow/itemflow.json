@@ -1,0 +1,43 @@
+{
+ "app": "itemflow",
+ "doctype": "Sidebar",
+ "header_icon": "package",
+ "items": [
+  {
+   "child": 0,
+   "collapsible": 1,
+   "doctype": "Sidebar Item",
+   "icon": "package-search",
+   "idx": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Inventory",
+   "link_to": "itemflow-inventory",
+   "link_type": "Page",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "doctype": "Sidebar Item",
+   "icon": "settings-2",
+   "idx": 2,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Itemflow Settings",
+   "link_to": "Itemflow Settings",
+   "link_type": "DocType",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "show_arrow": 0,
+   "type": "Link"
+  }
+ ],
+ "module": "ItemFlow",
+ "name": "ItemFlow",
+ "standard": 1,
+ "title": "ItemFlow"
+}

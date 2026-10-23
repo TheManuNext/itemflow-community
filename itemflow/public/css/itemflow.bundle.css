@@ -1,0 +1,686 @@
+/* ItemFlow - Frappe v16 / Bootstrap 4.6.2 */
+
+/* Spinner for Lucide icons (replaces FontAwesome's .fa-spin, removed in v16.50) */
+@keyframes itemflow-icon-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Scope to `.item-selector-container` (not `.item-selector-modal`) so these
+   helpers also apply to the inline Desk Page, which reuses the same markup
+   without the modal wrapper. */
+.item-selector-container .icon-spin {
+    animation: itemflow-icon-spin 1s linear infinite;
+    transform-origin: center;
+}
+
+/* Frappe's global `.icon` uses `margin: 0 auto` to centre standalone icons.
+   In flex rows that auto-margin absorbs free space and pushes the text away.
+   Frappe resets it the same way in its own flex rows
+   (common/controls.scss: `.contact-line svg.icon { flex-shrink: 0; margin: 0; }`).
+   Scoped to `.item-selector-container` so the tree/grid stay aligned in both the
+   modal catalogue and the inline Inventory page. */
+.item-selector-container svg.icon {
+    flex-shrink: 0;
+    margin: 0;
+}
+
+/* Modal sizing */
+.item-selector-modal .modal-dialog {
+    margin: 2vh auto !important;
+    width: 90vw;
+    max-width: 1400px;
+}
+
+.item-selector-modal .modal-content {
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-selector-modal .modal-body {
+    padding: 10px 15px;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Frappe wraps the HTML field in several non-flex containers. Neutralize them
+   so .item-selector-container becomes the flex child of .modal-body and can
+   fill its height; otherwise the grid grows and gets clipped with no scroll. */
+.item-selector-modal .modal-body > div:not(.modal-message),
+.item-selector-modal .modal-body form,
+.item-selector-modal .modal-body .form-layout,
+.item-selector-modal .modal-body .form-page,
+.item-selector-modal .modal-body .form-section,
+.item-selector-modal .modal-body .section-body,
+.item-selector-modal .modal-body .form-column,
+.item-selector-modal .modal-body .frappe-control {
+    display: contents;
+}
+
+.item-selector-modal .modal-footer {
+    padding: 10px 15px !important;
+    flex: 0 0 auto;
+}
+
+/* Main container: fills the modal body and stacks vertically */
+.item-selector-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+}
+
+.item-selector-container .search-bar-container {
+    margin-bottom: 10px;
+    flex: 0 0 auto;
+}
+
+.item-selector-container > .row.flex-nowrap {
+    flex: 1 1 auto;
+    min-height: 0;
+    align-items: stretch;
+}
+
+/* Left panel: tree */
+#tree-sidebar-col {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: none;
+    min-height: 0;
+    overflow: hidden;
+    padding-right: 10px;
+    border-right: 1px solid var(--border-color);
+}
+
+/* Tree scrolls while the "Categories" header stays fixed */
+#tree-sidebar-col #tree-container {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+/* Tree content: no min-width so it expands and scrolls */
+.item-selector-container .item-group-tree {
+    min-width: max-content;
+}
+
+/* Right panel: items */
+#items-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+    padding-left: 10px;
+}
+
+/* Items grid scroll: fills the remaining space, pagination stays visible */
+.item-selector-container .items-grid-container {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+/* Summary bar */
+.item-selector-container #items-summary {
+    padding: 8px 10px !important;
+    background: var(--bg-light-gray);
+    border-top: 1px solid var(--border-color);
+    margin-top: 5px;
+}
+
+/* Pagination bar */
+.item-selector-container .pagination-container {
+    padding: 5px 10px !important;
+    background: var(--bg-light-gray);
+    border-top: 1px solid var(--border-color);
+    flex: 0 0 auto;
+}
+
+/* Clear selection button */
+.item-selector-container .clear-selection-btn {
+    font-size: 0.85rem;
+    padding: 2px 8px;
+}
+
+/* Tree nodes */
+.item-selector-container .tree-node {
+    position: relative;
+}
+
+.item-selector-container .tree-children {
+    border-left: 1px dashed var(--border-color);
+    margin-left: 7px;
+    padding-left: 5px;
+}
+
+.item-selector-container .tree-children.d-none {
+    display: none !important;
+}
+
+.item-selector-container .toggle-icon {
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* Tree group links: nowrap so horizontal scroll works */
+.item-selector-container .group-link {
+    cursor: pointer;
+    text-decoration: none !important;
+    user-select: none;
+    color: var(--text-color);
+    white-space: nowrap;
+    gap: 6px; /* Espaciado uniforme entre icono y texto */
+}
+
+.item-selector-container .group-link:hover {
+    background-color: var(--bg-light-gray);
+}
+
+/* Active group: blue tones, dark-mode friendly */
+.item-selector-container .group-link.active {
+    background-color: var(--blue-100, #dbeafe) !important;
+    color: var(--blue-700, #1d4ed8) !important;
+    border-radius: var(--border-radius);
+}
+
+.item-selector-container .group-link.active i {
+    color: var(--blue-700, #1d4ed8) !important;
+}
+
+[data-theme="dark"] .item-selector-container .group-link.active {
+    background-color: var(--blue-900, #1e3a5f) !important;
+    color: var(--blue-200, #bfdbfe) !important;
+}
+
+[data-theme="dark"] .item-selector-container .group-link.active i {
+    color: var(--blue-200, #bfdbfe) !important;
+}
+
+/* Hover effect */
+.item-selector-container .hover-bg:hover {
+    background-color: var(--bg-light-gray);
+    text-decoration: none;
+}
+
+/* Selected row: green tint + left accent border */
+.item-selector-container .item-selected {
+    background-color: color-mix(in srgb, var(--green-500) 14%, transparent) !important;
+    box-shadow: inset 3px 0 0 var(--green-500, #28a745);
+}
+
+.item-selector-container .item-selected td {
+    background-color: transparent !important;
+}
+
+/* Clickable rows */
+.item-selector-container tbody tr {
+    cursor: pointer;
+}
+
+/* Qty button group — horizontal: − [n] + */
+.item-selector-container .qty-btn-group {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2px;
+}
+
+.item-selector-container .qty-btn {
+    width: 22px;
+    height: 24px;
+    padding: 0;
+    font-size: 0.75rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Qty input — ocultar flechas nativas del browser */
+.item-selector-container .qty-input {
+    min-width: 52px;
+    max-width: 62px;
+    text-align: center;
+    -moz-appearance: textfield;
+}
+
+.item-selector-container .qty-input::-webkit-outer-spin-button,
+.item-selector-container .qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Qty input resaltado cuando el item está seleccionado */
+.item-selector-container .qty-input.qty-active {
+    background-color: color-mix(in srgb, var(--green-500) 14%, transparent);
+    border-color: var(--green-500, #28a745);
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+/* Sticky table header */
+.item-selector-container .table th {
+    position: sticky;
+    top: 0;
+    background: var(--bg-light-gray);
+    z-index: 1;
+}
+
+/* Context bar: icon-to-text spacing (backup for Bootstrap gap-2) */
+.item-selector-container .context-bar {
+    gap: 8px;
+}
+
+/* Item row: image-to-text spacing via gap on flex parent */
+.item-selector-container .item-cell {
+    gap: 10px;
+}
+
+/* Primera columna: padding proporcional en cabecera y celdas */
+.item-selector-container .table th:first-child,
+.item-selector-container .table td:first-child {
+    padding-left: 22px !important;
+}
+
+/* Search bar: filter rows spacing */
+.search-bar-container .input-group {
+    margin-bottom: 0;
+}
+
+.search-filter-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+
+/* Primary search box grows; the Filters button sits to its right */
+.search-bar-container .search-input-primary {
+    flex: 1 1 280px;
+    max-width: 460px;
+}
+
+.search-bar-container .advanced-toggle-btn {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+/* Catalogue toolbar actions (Material Request / Refresh): pushed to the right
+   of the search row. Hidden when empty (edit mode). */
+.search-bar-container .catalog-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.search-bar-container .catalog-toolbar-actions:empty {
+    display: none;
+}
+
+.search-bar-container .filters-count-badge {
+    font-size: 0.7rem;
+    vertical-align: middle;
+}
+
+/* Collapsible advanced filters panel */
+.search-bar-container #advanced-filters-collapse {
+    margin-top: 10px;
+}
+
+.search-bar-container .advanced-filters-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius, 6px);
+    background-color: var(--bg-light-gray);
+}
+
+.search-bar-container .advanced-filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 0 1 180px;
+}
+
+.search-bar-container .advanced-filter-item .search-filter-input {
+    width: 100%;
+}
+
+/* Rounded filter/search boxes */
+.search-bar-container .search-filter-input {
+    border-radius: 0.375rem;
+    overflow: hidden;
+    margin-bottom: 0;
+    /* El --control-bg por defecto de Frappe equivale al --bg-light-gray del
+       panel de filtros: sin este fondo/borde las cajas quedan invisibles. */
+    background-color: var(--fg-color);
+    border: 1px solid var(--gray-400);
+}
+
+/* La superficie la aporta el grupo, para que el borde sea uniforme en el
+   buscador principal y en los filtros. */
+.search-bar-container .search-filter-input .form-control {
+    background-color: transparent;
+    border: 0;
+}
+
+.search-bar-container .search-filter-input .form-control:focus {
+    box-shadow: none;
+}
+
+/* Anillo de foco en el grupo (el overflow del grupo recortaría el del input) */
+.search-bar-container .search-filter-input:focus-within {
+    border-color: var(--primary);
+    /* Token de foco de Frappe: se redefine en dark (ver espresso/effects.css). */
+    box-shadow: var(--focus-default);
+}
+
+/* Botón de limpiar: separador sutil en lugar de un borde doble */
+.search-bar-container .search-filter-input .btn-outline-secondary {
+    background: transparent;
+    border: 0;
+    border-left: 1px solid var(--border-color);
+}
+
+/* Etiquetas de filtro legibles sobre el panel gris */
+.search-bar-container .advanced-filter-item label {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+/* Highlight missing required fields (validator.js) */
+.highlight-error {
+    border-color: var(--red-500, #dc3545) !important;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--red-500) 25%, transparent) !important;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Bootstrap 5 font-weight utilities missing in Bootstrap 4.6 (Frappe v16) */
+.item-selector-container .fw-bold {
+    font-weight: 700 !important;
+}
+
+.item-selector-container .fw-medium {
+    font-weight: 500 !important;
+}
+
+/* Theme-aware text colour. Bootstrap `.text-primary` (v16) and `.text-ink-base`
+   do not stay readable across themes; `--text-color` adapts to light/dark. */
+.item-selector-container .if-text {
+    color: var(--text-color);
+}
+
+/* Warning-tinted text that stays readable on any surface. Bootstrap/Frappe's
+   `.text-warning` (#ffa00a) is meant for alert backgrounds and fails contrast on
+   light surfaces; `--ink-yellow-8` is theme-aware (light: #9a6304 / dark: #f8d76a).
+   Kept unscoped so it also works inside the stock-warning dialogs. */
+.if-text-warning {
+    color: var(--ink-yellow-8, #9a6304);
+}
+
+/* ==========================================================================
+   Responsive — tablet y móvil (Frappe v16 / Bootstrap 4.6.2)
+   Breakpoints: <=991.98px (tablet + móvil), <=767.98px (teléfono).
+   Escritorio (>991.98px) conserva el layout de dos columnas y la tabla.
+   ========================================================================== */
+
+@media (max-width: 991.98px) {
+    /* Contenedor: contexto de recorte para el drawer del árbol */
+    .item-selector-container {
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* ---- Barra de búsqueda / filtros / acciones ---- */
+    .search-bar-container .search-filter-row {
+        flex-wrap: wrap;
+    }
+
+    /* El buscador ocupa su propia línea; filtros y acciones van debajo */
+    .search-bar-container .search-input-primary {
+        flex: 1 1 100%;
+        max-width: none;
+    }
+
+    .search-bar-container .catalog-toolbar-actions {
+        margin-left: 0;
+        flex-wrap: wrap;
+    }
+
+    .search-bar-container .advanced-filters-grid {
+        padding: 10px;
+    }
+
+    /* Cada filtro ocupa el ancho disponible en el panel colapsable */
+    .search-bar-container .advanced-filter-item {
+        flex: 1 1 100%;
+    }
+
+    /* ---- Layout de columnas: el grid ocupa todo el ancho ---- */
+    /* Neutralizar el gutter de Bootstrap (-15px a cada lado del .row) para que
+       el contenido quede alineado con el contenedor; si no, el `overflow:hidden`
+       del drawer recorta esos 15px por la izquierda (primera letra de las
+       etiquetas de las tarjetas). */
+    .item-selector-container > .row.flex-nowrap {
+        position: relative;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .item-selector-container #items-container {
+        flex: 1 1 100%;
+        max-width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* El botón "restaurar" de escritorio no aplica al modo drawer */
+    .item-selector-container #tree-restore-col {
+        display: none !important;
+    }
+
+    /* ---- Drawer del árbol de categorías ---- */
+    .item-selector-container #tree-sidebar-col {
+        position: absolute;
+        top: 0;
+        right: auto;
+        bottom: 0;
+        left: 0;
+        width: 88%;
+        max-width: 340px;
+        height: 100%;
+        padding-right: 10px;
+        border-right: 1px solid var(--border-color);
+        background: var(--fg-color);
+        box-shadow: var(--shadow-lg, 0 8px 24px rgba(0, 0, 0, 0.18));
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        z-index: 30;
+    }
+
+    .item-selector-container.if-tree-open #tree-sidebar-col {
+        transform: translateX(0);
+    }
+
+    .item-selector-container .if-tree-overlay {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.25s ease;
+        z-index: 25;
+    }
+
+    .item-selector-container.if-tree-open .if-tree-overlay {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* ---- Footer: evitar desborde horizontal ---- */
+    .item-selector-modal .modal-footer {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .item-selector-modal .modal-footer #items-summary {
+        width: 100%;
+        margin-right: 0 !important;
+        white-space: normal;
+    }
+
+    /* ---- Grilla: scroll horizontal de respaldo ---- */
+    .item-selector-container .items-grid-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Tablet: tabla con la columna "Item" fija al desplazar en horizontal */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .item-selector-container .itemflow-items-table th:first-child,
+    .item-selector-container .itemflow-items-table td:first-child {
+        position: sticky;
+        left: 0;
+        background: var(--fg-color);
+        z-index: 2;
+    }
+
+    .item-selector-container .itemflow-items-table thead th:first-child {
+        background: var(--bg-light-gray);
+        z-index: 3;
+    }
+}
+
+/* Teléfono: modal a pantalla completa + grilla como tarjetas apiladas */
+@media (max-width: 767.98px) {
+    .item-selector-modal .modal-dialog {
+        margin: 0 !important;
+        width: 100%;
+        max-width: none;
+        height: 100%;
+    }
+
+    .item-selector-modal .modal-content {
+        height: 100vh;
+        height: 100dvh;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .item-selector-modal .modal-body {
+        padding: 8px 10px;
+    }
+
+    .item-selector-modal .modal-footer {
+        padding: 8px 10px !important;
+    }
+
+    /* ---- Tabla -> tarjetas apiladas (etiquetas vía data-label) ---- */
+    .item-selector-container .itemflow-items-table,
+    .item-selector-container .itemflow-items-table tbody,
+    .item-selector-container .itemflow-items-table tr {
+        display: block;
+        width: 100%;
+    }
+
+    .item-selector-container .itemflow-items-table thead {
+        display: none;
+    }
+
+    .item-selector-container .itemflow-items-table tr {
+        margin-bottom: 10px;
+        padding: 8px 10px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius, 8px);
+        background: var(--fg-color);
+    }
+
+    .item-selector-container .itemflow-items-table td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        width: auto;
+        padding: 3px 0 !important;
+        border: 0;
+    }
+
+    .item-selector-container .itemflow-items-table td::before {
+        content: attr(data-label);
+        flex: 0 0 auto;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        color: var(--text-muted, var(--gray-500));
+    }
+
+    /* La primera celda es la cabecera de la tarjeta: sin etiqueta */
+    .item-selector-container .itemflow-items-table td.if-cell-item {
+        display: block;
+        padding-left: 0 !important;
+        padding-bottom: 6px !important;
+        margin-bottom: 4px;
+        border-bottom: 1px dashed var(--border-color);
+    }
+
+    .item-selector-container .itemflow-items-table td.if-cell-item::before {
+        content: none;
+    }
+
+    /* Controles de cantidad con tamaño táctil cómodo */
+    .item-selector-container .itemflow-items-table .qty-btn {
+        width: 40px;
+        height: 36px;
+    }
+
+    .item-selector-container .itemflow-items-table .qty-input {
+        min-width: 56px;
+    }
+}
+
+/* ==========================================================================
+   Desk Page "Inventory" (solo lectura) — catálogo inline.
+   Reutiliza el markup del modal; solo necesita una altura definida (en el
+   modal la aportaba `.modal-body`) y compensar el gutter negativo de `.row`.
+   El resto del layout y el responsive móvil ya están scopeados a
+   `.item-selector-container`.
+   ========================================================================== */
+.itemflow-inventory-page .item-selector-container {
+    height: calc(100vh - 170px);
+    overflow: hidden;
+    /* Padding igual que `.modal-body`:
+       - horizontal (15px): compensa el gutter -15px de `.row`; sin él
+         `overflow: hidden` recorta el chevron de categorías y corta
+         "In Stock Only".
+       - vertical (10px): separa la barra de búsqueda / Filters / Refresh del
+         separador del page-head, y la paginación del borde inferior. */
+    padding: 10px 15px;
+}
+
+@media (max-width: 767.98px) {
+    .itemflow-inventory-page .item-selector-container {
+        height: calc(100dvh - 150px);
+    }
+}

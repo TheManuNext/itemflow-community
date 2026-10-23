@@ -1,0 +1,299 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2024-01-01 00:00:00.000000",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "behavior_section",
+    "low_stock_threshold",
+    "default_qty",
+    "max_items",
+    "add_chunk_size",
+    "column_break_1",
+    "enable_debug_mode",
+    "stock_section",
+    "default_warehouse",
+    "display_section",
+    "show_item_images",
+    "show_brand",
+    "filter_fields_section",
+    "show_filter_brand",
+    "show_filter_stock_uom",
+    "column_break_2",
+    "button_style",
+    "check_order_button_style",
+    "button_position",
+    "enabled_doctypes_section",
+    "enable_sales_order",
+    "enable_quotation",
+    "enable_sales_invoice",
+    "column_break_3",
+    "enable_purchase_order",
+    "enable_material_request",
+    "column_break_4",
+    "enable_supplier_quotation",
+    "enable_purchase_invoice",
+    "enable_purchase_receipt",
+    "enable_stock_entry",
+    "extra_filters_section",
+    "filters"
+  ],
+  "fields": [
+    {
+      "fieldname": "behavior_section",
+      "fieldtype": "Section Break",
+      "label": "Behaviour"
+    },
+    {
+      "default": "10",
+      "description": "Stock level below which items are marked as low stock",
+      "fieldname": "low_stock_threshold",
+      "fieldtype": "Int",
+      "label": "Low Stock Threshold",
+      "non_negative": 1,
+      "reqd": 1
+    },
+    {
+      "default": "1",
+      "description": "Default quantity suggested when selecting an item",
+      "fieldname": "default_qty",
+      "fieldtype": "Int",
+      "label": "Default Quantity",
+      "non_negative": 1,
+      "reqd": 1
+    },
+    {
+      "default": "15",
+      "description": "Maximum number of items that can be added in a single operation",
+      "fieldname": "max_items",
+      "fieldtype": "Int",
+      "label": "Max Items per Operation",
+      "non_negative": 1,
+      "reqd": 1
+    },
+    {
+      "default": "10",
+      "description": "Items added per batch before continuing with the next batch",
+      "fieldname": "add_chunk_size",
+      "fieldtype": "Int",
+      "label": "Items per Batch",
+      "non_negative": 1,
+      "reqd": 1
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "0",
+      "description": "Enable verbose logging in the browser console",
+      "fieldname": "enable_debug_mode",
+      "fieldtype": "Check",
+      "label": "Enable Debug Mode"
+    },
+    {
+      "fieldname": "stock_section",
+      "fieldtype": "Section Break",
+      "label": "Stock"
+    },
+    {
+      "description": "Default warehouse for stock validation (optional)",
+      "fieldname": "default_warehouse",
+      "fieldtype": "Link",
+      "label": "Default Warehouse",
+      "options": "Warehouse"
+    },
+    {
+      "fieldname": "display_section",
+      "fieldtype": "Section Break",
+      "label": "Display"
+    },
+    {
+      "default": "1",
+      "description": "Show item thumbnail images in the grid",
+      "fieldname": "show_item_images",
+      "fieldtype": "Check",
+      "label": "Show Item Images"
+    },
+    {
+      "default": "1",
+      "description": "Show the Brand column in the item grid",
+      "fieldname": "show_brand",
+      "fieldtype": "Check",
+      "label": "Show Brand"
+    },
+    {
+      "fieldname": "filter_fields_section",
+      "fieldtype": "Section Break",
+      "label": "Filter Fields"
+    },
+    {
+      "default": "1",
+      "description": "Show the Brand filter in the item selector",
+      "fieldname": "show_filter_brand",
+      "fieldtype": "Check",
+      "label": "Show Brand Filter"
+    },
+    {
+      "default": "1",
+      "description": "Show the Stock UOM filter in the item selector",
+      "fieldname": "show_filter_stock_uom",
+      "fieldtype": "Check",
+      "label": "Show Stock UOM Filter"
+    },
+    {
+      "fieldname": "column_break_2",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "primary",
+      "fieldname": "button_style",
+      "fieldtype": "Select",
+      "label": "Advanced Search Button Style",
+      "options": "primary\nsecondary\ndanger\nghost"
+    },
+    {
+      "default": "secondary",
+      "fieldname": "check_order_button_style",
+      "fieldtype": "Select",
+      "label": "Review Items Button Style",
+      "options": "primary\nsecondary\ndanger\nghost"
+    },
+    {
+      "default": "top",
+      "description": "Position of the selector button in the form",
+      "fieldname": "button_position",
+      "fieldtype": "Select",
+      "label": "Button Position",
+      "options": "top\nbottom\nboth"
+    },
+    {
+      "fieldname": "enabled_doctypes_section",
+      "fieldtype": "Section Break",
+      "label": "Enabled Doctypes"
+    },
+    {
+      "default": "1",
+      "fieldname": "enable_sales_order",
+      "fieldtype": "Check",
+      "label": "Sales Order"
+    },
+    {
+      "default": "1",
+      "fieldname": "enable_quotation",
+      "fieldtype": "Check",
+      "label": "Quotation"
+    },
+    {
+      "default": "1",
+      "fieldname": "enable_sales_invoice",
+      "fieldtype": "Check",
+      "label": "Sales Invoice"
+    },
+    {
+      "fieldname": "column_break_3",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "1",
+      "fieldname": "enable_purchase_order",
+      "fieldtype": "Check",
+      "label": "Purchase Order"
+    },
+    {
+      "default": "1",
+      "fieldname": "enable_material_request",
+      "fieldtype": "Check",
+      "label": "Material Request"
+    },
+    {
+      "fieldname": "column_break_4",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "1",
+      "fieldname": "enable_supplier_quotation",
+      "fieldtype": "Check",
+      "label": "Supplier Quotation"
+    },
+    {
+      "default": "1",
+      "fieldname": "enable_purchase_invoice",
+      "fieldtype": "Check",
+      "label": "Purchase Invoice"
+    },
+    {
+      "default": "1",
+      "fieldname": "enable_purchase_receipt",
+      "fieldtype": "Check",
+      "label": "Purchase Receipt"
+    },
+    {
+      "default": "1",
+      "fieldname": "enable_stock_entry",
+      "fieldtype": "Check",
+      "label": "Stock Entry"
+    },
+    {
+      "fieldname": "extra_filters_section",
+      "fieldtype": "Section Break",
+      "label": "Extended Filters",
+      "description": "Filters registered by installed ItemFlow extensions. Control visibility and whether the field is shown as a grid column."
+    },
+    {
+      "fieldname": "filters",
+      "fieldtype": "Table",
+      "label": "Filters",
+      "options": "Itemflow Filter"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "issingle": 1,
+  "links": [],
+  "modified": "2025-01-01 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "ItemFlow",
+  "name": "Itemflow Settings",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "print": 1,
+      "read": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "read": 1,
+      "role": "Sales User"
+    },
+    {
+      "read": 1,
+      "role": "Sales Manager"
+    },
+    {
+      "read": 1,
+      "role": "Purchase User"
+    },
+    {
+      "read": 1,
+      "role": "Purchase Manager"
+    },
+    {
+      "read": 1,
+      "role": "Stock User"
+    },
+    {
+      "read": 1,
+      "role": "Stock Manager"
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
+}

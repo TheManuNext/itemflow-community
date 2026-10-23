@@ -1,0 +1,23 @@
+{
+ "app": "itemflow",
+ "creation": "2026-10-08 00:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Dock",
+ "idx": 0,
+ "items": [
+  {
+   "added": 0,
+   "hidden": 0,
+   "icon": "package",
+   "link_to": "ItemFlow",
+   "link_type": "Sidebar",
+   "title": "ItemFlow"
+  }
+ ],
+ "modified": "2026-10-08 00:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "itemflow",
+ "owner": "Administrator",
+ "standard": 1,
+ "user": ""
+}
