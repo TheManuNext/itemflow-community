@@ -109,7 +109,7 @@ export class ItemSelectorConfig {
 					filters: doc.filters || [],
 				};
 
-				// Cargar flags individuales de filtros nativos
+				// Load the individual native filter flags
 				FILTER_FIELDS.forEach((field) => {
 					const key = `show_filter_${field}`;
 					this.settings[key] = doc[key] ?? this.defaults[key];
@@ -149,7 +149,7 @@ export class ItemSelectorConfig {
 			"Stock Entry": "enable_stock_entry",
 		};
 		const key = keyMap[doctype];
-		if (!key) return true; // doctypes no configurados se permiten por defecto
+		if (!key) return true; // unconfigured doctypes are allowed by default
 		return !!this.get(key);
 	}
 

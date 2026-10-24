@@ -90,7 +90,7 @@ describe("ItemsGridDataLoader - company wiring", () => {
 	it("searchItems sends company to get_items_by_search", async () => {
 		const loader = makeLoader();
 
-		await loader.searchItems("lampara", 1);
+		await loader.searchItems("lamp", 1);
 
 		const call = calls.find((c) => c.method === "itemflow.api.get_items_by_search");
 		expect(call).toBeTruthy();
@@ -108,10 +108,10 @@ describe("ItemsGridDataLoader - company wiring", () => {
 		expect(call.args.company).toBe("Company A");
 	});
 
-	it("carga uoms+stock+precio con una sola llamada y los pasa al renderer", async () => {
+	it("loads UOMs + stock + price in a single call and passes them to the renderer", async () => {
 		const loader = makeLoader();
 
-		await loader.searchItems("lampara", 1);
+		await loader.searchItems("lamp", 1);
 
 		// A single enrichment call (not three separate endpoints).
 		expect(metaMock.getItemsMeta).toHaveBeenCalledTimes(1);

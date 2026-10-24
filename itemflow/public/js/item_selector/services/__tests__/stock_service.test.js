@@ -53,7 +53,7 @@ describe("ItemSelectorStockService - company wiring", () => {
 		expect(call.args.company).toBe("Company B");
 	});
 
-	it("usa claves de cache distintas por compania", () => {
+	it("uses different cache keys per company", () => {
 		const a = new ItemSelectorStockService(makeFrm({ company: "Company A" }));
 		const b = new ItemSelectorStockService(makeFrm({ company: "Company B" }));
 

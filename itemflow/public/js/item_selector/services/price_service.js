@@ -48,7 +48,7 @@ export class ItemSelectorPriceService {
                 { item_codes: missing_codes, price_list: price_list, buying: this.isBuying() ? 1 : 0 }
             ) || {};
 
-            // Actualizar cache client-side
+            // Update the client-side cache
             Object.entries(priceMap).forEach(([code, price]) => {
                 const key = `${cache_key}:${code}`;
                 this.cache.set(key, { price, timestamp: now });
@@ -96,7 +96,7 @@ export class ItemSelectorPriceService {
         }
     }
 
-    // Limpiar cache client-side
+    // Clear the client-side cache
     clearCache() {
         this.cache.clear();
     }

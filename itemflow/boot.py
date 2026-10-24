@@ -12,11 +12,11 @@ def _allow_negative_stock():
 
 
 def extend_bootinfo(bootinfo):
-	"""Expone Itemflow Settings en frappe.boot.
+	"""Exposes Itemflow Settings in frappe.boot.
 
-	Evita un roundtrip a la base de datos por cada refresh de formulario:
-	el frontend (config.js) lee `frappe.boot.item_selector_settings` cuando esta
-	presente y solo cae a `frappe.db.get_doc` como fallback.
+	Avoids a database round trip on every form refresh: the frontend
+	(config.js) reads `frappe.boot.item_selector_settings` when present and
+	only falls back to `frappe.db.get_doc` otherwise.
 	"""
 	if not frappe.has_permission("Item", ptype="read"):
 		return

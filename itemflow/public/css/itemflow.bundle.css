@@ -181,7 +181,7 @@
     user-select: none;
     color: var(--text-color);
     white-space: nowrap;
-    gap: 6px; /* Espaciado uniforme entre icono y texto */
+    gap: 6px; /* Even spacing between icon and text */
 }
 
 .item-selector-container .group-link:hover {
@@ -249,7 +249,7 @@
     flex-shrink: 0;
 }
 
-/* Qty input — ocultar flechas nativas del browser */
+/* Qty input — hide the browser's native spinner arrows */
 .item-selector-container .qty-input {
     min-width: 52px;
     max-width: 62px;
@@ -263,7 +263,7 @@
     margin: 0;
 }
 
-/* Qty input resaltado cuando el item está seleccionado */
+/* Qty input highlighted when the item is selected */
 .item-selector-container .qty-input.qty-active {
     background-color: color-mix(in srgb, var(--green-500) 14%, transparent);
     border-color: var(--green-500, #28a745);
@@ -289,7 +289,7 @@
     gap: 10px;
 }
 
-/* Primera columna: padding proporcional en cabecera y celdas */
+/* First column: proportional padding in the header and cells */
 .item-selector-container .table th:first-child,
 .item-selector-container .table td:first-child {
     padding-left: 22px !important;
@@ -368,14 +368,14 @@
     border-radius: 0.375rem;
     overflow: hidden;
     margin-bottom: 0;
-    /* El --control-bg por defecto de Frappe equivale al --bg-light-gray del
-       panel de filtros: sin este fondo/borde las cajas quedan invisibles. */
+    /* Frappe's default --control-bg matches the --bg-light-gray of the filter
+       panel: without this background/border the boxes are invisible. */
     background-color: var(--fg-color);
     border: 1px solid var(--gray-400);
 }
 
-/* La superficie la aporta el grupo, para que el borde sea uniforme en el
-   buscador principal y en los filtros. */
+/* The group provides the surface, so the border is uniform in both the main
+   search box and the filters. */
 .search-bar-container .search-filter-input .form-control {
     background-color: transparent;
     border: 0;
@@ -385,21 +385,21 @@
     box-shadow: none;
 }
 
-/* Anillo de foco en el grupo (el overflow del grupo recortaría el del input) */
+/* Focus ring on the group (the group's overflow would clip the input's ring) */
 .search-bar-container .search-filter-input:focus-within {
     border-color: var(--primary);
-    /* Token de foco de Frappe: se redefine en dark (ver espresso/effects.css). */
+    /* Frappe focus token: redefined in dark mode (see espresso/effects.css). */
     box-shadow: var(--focus-default);
 }
 
-/* Botón de limpiar: separador sutil en lugar de un borde doble */
+/* Clear button: subtle separator instead of a double border */
 .search-bar-container .search-filter-input .btn-outline-secondary {
     background: transparent;
     border: 0;
     border-left: 1px solid var(--border-color);
 }
 
-/* Etiquetas de filtro legibles sobre el panel gris */
+/* Filter labels that stay legible on the grey panel */
 .search-bar-container .advanced-filter-item label {
     color: var(--text-color);
     font-weight: 600;
@@ -436,24 +436,24 @@
 }
 
 /* ==========================================================================
-   Responsive — tablet y móvil (Frappe v16 / Bootstrap 4.6.2)
-   Breakpoints: <=991.98px (tablet + móvil), <=767.98px (teléfono).
-   Escritorio (>991.98px) conserva el layout de dos columnas y la tabla.
+   Responsive — tablet and mobile (Frappe v16 / Bootstrap 4.6.2)
+   Breakpoints: <=991.98px (tablet + mobile), <=767.98px (phone).
+   Desktop (>991.98px) keeps the two-column layout and the table.
    ========================================================================== */
 
 @media (max-width: 991.98px) {
-    /* Contenedor: contexto de recorte para el drawer del árbol */
+    /* Container: clipping context for the tree drawer */
     .item-selector-container {
         position: relative;
         overflow: hidden;
     }
 
-    /* ---- Barra de búsqueda / filtros / acciones ---- */
+    /* ---- Search bar / filters / actions ---- */
     .search-bar-container .search-filter-row {
         flex-wrap: wrap;
     }
 
-    /* El buscador ocupa su propia línea; filtros y acciones van debajo */
+    /* The search box takes its own row; filters and actions go below it */
     .search-bar-container .search-input-primary {
         flex: 1 1 100%;
         max-width: none;
@@ -468,16 +468,16 @@
         padding: 10px;
     }
 
-    /* Cada filtro ocupa el ancho disponible en el panel colapsable */
+    /* Each filter fills the available width in the collapsible panel */
     .search-bar-container .advanced-filter-item {
         flex: 1 1 100%;
     }
 
-    /* ---- Layout de columnas: el grid ocupa todo el ancho ---- */
-    /* Neutralizar el gutter de Bootstrap (-15px a cada lado del .row) para que
-       el contenido quede alineado con el contenedor; si no, el `overflow:hidden`
-       del drawer recorta esos 15px por la izquierda (primera letra de las
-       etiquetas de las tarjetas). */
+    /* ---- Column layout: the grid fills the full width ---- */
+    /* Neutralise Bootstrap's gutter (-15px on each side of .row) so the
+       content aligns with the container; otherwise the drawer's
+       `overflow:hidden` clips those 15px on the left (the first letter of the
+       card labels). */
     .item-selector-container > .row.flex-nowrap {
         position: relative;
         margin-left: 0;
@@ -491,12 +491,12 @@
         padding-right: 0;
     }
 
-    /* El botón "restaurar" de escritorio no aplica al modo drawer */
+    /* The desktop "restore" button does not apply in drawer mode */
     .item-selector-container #tree-restore-col {
         display: none !important;
     }
 
-    /* ---- Drawer del árbol de categorías ---- */
+    /* ---- Category tree drawer ---- */
     .item-selector-container #tree-sidebar-col {
         position: absolute;
         top: 0;
@@ -537,7 +537,7 @@
         visibility: visible;
     }
 
-    /* ---- Footer: evitar desborde horizontal ---- */
+    /* ---- Footer: prevent horizontal overflow ---- */
     .item-selector-modal .modal-footer {
         flex-wrap: wrap;
         gap: 8px;
@@ -549,14 +549,14 @@
         white-space: normal;
     }
 
-    /* ---- Grilla: scroll horizontal de respaldo ---- */
+    /* ---- Grid: fallback horizontal scroll ---- */
     .item-selector-container .items-grid-container {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
 }
 
-/* Tablet: tabla con la columna "Item" fija al desplazar en horizontal */
+/* Tablet: table with the "Item" column pinned while scrolling horizontally */
 @media (min-width: 768px) and (max-width: 991.98px) {
     .item-selector-container .itemflow-items-table th:first-child,
     .item-selector-container .itemflow-items-table td:first-child {
@@ -572,7 +572,7 @@
     }
 }
 
-/* Teléfono: modal a pantalla completa + grilla como tarjetas apiladas */
+/* Phone: full-screen modal + grid as stacked cards */
 @media (max-width: 767.98px) {
     .item-selector-modal .modal-dialog {
         margin: 0 !important;
@@ -596,7 +596,7 @@
         padding: 8px 10px !important;
     }
 
-    /* ---- Tabla -> tarjetas apiladas (etiquetas vía data-label) ---- */
+    /* ---- Table -> stacked cards (labels via data-label) ---- */
     .item-selector-container .itemflow-items-table,
     .item-selector-container .itemflow-items-table tbody,
     .item-selector-container .itemflow-items-table tr {
@@ -636,7 +636,7 @@
         color: var(--text-muted, var(--gray-500));
     }
 
-    /* La primera celda es la cabecera de la tarjeta: sin etiqueta */
+    /* The first cell is the card header: no label */
     .item-selector-container .itemflow-items-table td.if-cell-item {
         display: block;
         padding-left: 0 !important;
@@ -649,7 +649,7 @@
         content: none;
     }
 
-    /* Controles de cantidad con tamaño táctil cómodo */
+    /* Quantity controls with a comfortable touch target size */
     .item-selector-container .itemflow-items-table .qty-btn {
         width: 40px;
         height: 36px;
@@ -661,21 +661,21 @@
 }
 
 /* ==========================================================================
-   Desk Page "Inventory" (solo lectura) — catálogo inline.
-   Reutiliza el markup del modal; solo necesita una altura definida (en el
-   modal la aportaba `.modal-body`) y compensar el gutter negativo de `.row`.
-   El resto del layout y el responsive móvil ya están scopeados a
+   Desk Page "Inventory" (read-only) — inline catalogue.
+   Reuses the modal markup; it only needs a defined height (in the modal this
+   was provided by `.modal-body`) and to offset the negative gutter of `.row`.
+   The rest of the layout and the mobile responsive rules are already scoped to
    `.item-selector-container`.
    ========================================================================== */
 .itemflow-inventory-page .item-selector-container {
     height: calc(100vh - 170px);
     overflow: hidden;
-    /* Padding igual que `.modal-body`:
-       - horizontal (15px): compensa el gutter -15px de `.row`; sin él
-         `overflow: hidden` recorta el chevron de categorías y corta
+    /* Padding matching `.modal-body`:
+       - horizontal (15px): offsets the -15px gutter of `.row`; without it
+         `overflow: hidden` clips the category chevron and truncates
          "In Stock Only".
-       - vertical (10px): separa la barra de búsqueda / Filters / Refresh del
-         separador del page-head, y la paginación del borde inferior. */
+       - vertical (10px): separates the search bar / Filters / Refresh from the
+         page-head separator, and the pagination from the bottom edge. */
     padding: 10px 15px;
 }
 

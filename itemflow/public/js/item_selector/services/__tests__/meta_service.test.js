@@ -48,7 +48,7 @@ describe("ItemSelectorMetaService", () => {
 		expect(meta["ITEM-1"].stock).toBe(3);
 	});
 
-	it("usa compra (buying=1) en documentos de compra", async () => {
+	it("uses buying (buying=1) on purchase documents", async () => {
 		const frm = {
 			doctype: "Purchase Order",
 			doc: { doctype: "Purchase Order", company: "Company A", buying_price_list: "Buying 2026" },
@@ -61,7 +61,7 @@ describe("ItemSelectorMetaService", () => {
 		expect(calls[0].args.price_list).toBe("Buying 2026");
 	});
 
-	it("reutiliza el cache cliente en llamadas repetidas", async () => {
+	it("reuses the client cache on repeated calls", async () => {
 		const service = new ItemSelectorMetaService(makeFrm({ company: "Company A" }));
 
 		await service.getItemsMeta(["ITEM-1"]);

@@ -72,7 +72,7 @@ describe("buildItemDetailsCtx", () => {
 		expect(ctx.customer).toBe("Lead Co");
 	});
 
-	it("normalizes boolean-ish pos/return fields", () => {
+	it("normalises boolean-ish pos/return fields", () => {
 		const ctx = buildItemDetailsCtx(doc({ is_pos: "1", is_return: 0 }), row(), "Nos", 1);
 		expect(ctx.is_pos).toBe(1);
 		expect(ctx.is_return).toBe(0);

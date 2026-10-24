@@ -78,7 +78,7 @@ export class ItemsGridDataLoader {
 			stock_uom: entry.first_row.stock_uom || this._fallbackUom(),
 			uom: entry.first_row.uom || entry.first_row.stock_uom || this._fallbackUom(),
 			conversion_factor: entry.first_row.conversion_factor || 1,
-			image: null, // frm.doc.items no almacena image URL
+			image: null, // frm.doc.items does not store the image URL
 			brand: null,
 			...Object.fromEntries(
 				this.selector.config.getColumnFields().map((field) => [

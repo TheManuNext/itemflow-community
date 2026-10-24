@@ -112,7 +112,7 @@ class TestItemSelectorAPI(FrappeTestCase):
 		self.assertIsInstance(result["total"], int)
 		self.assertTrue(
 			any(item["item_code"] == "TEST-ITEM-001" for item in result["items"]),
-			"El item de prueba debe aparecer en los resultados",
+			"The test item should appear in the results",
 		)
 
 	def test_get_items_by_group_multiple(self):
@@ -325,7 +325,7 @@ class TestItemSelectorAPI(FrappeTestCase):
 		self.assertIn("total", result)
 		self.assertTrue(
 			any(item["item_code"] == "TEST-ITEM-001" for item in result["items"]),
-			"La busqueda debe encontrar el item de prueba por codigo",
+			"The search should find the test item by code",
 		)
 
 	def test_get_items_by_search_empty(self):
@@ -708,7 +708,7 @@ class TestItemSelectorAPI(FrappeTestCase):
 		self.assertIsNotNone(condition)
 		self.assertIn("item_code IN (SELECT", condition)
 		self.assertNotIn("item_code IN (%s", condition)
-		self.assertNotIn("LIMIT", condition)  # MariaDB no permite LIMIT en IN (subquery)
+		self.assertNotIn("LIMIT", condition)  # MariaDB does not allow LIMIT in IN (subquery)
 		# 3 bigrams + count
 		self.assertEqual(len(params), 4)
 

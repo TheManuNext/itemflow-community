@@ -1220,7 +1220,7 @@ def invalidate_cache():
 def rebuild_search_index():
 	"""Rebuild the n-gram search index. System Manager only.
 
-	Runs inline for small catalogs, otherwise queues a long background job.
+	Runs inline for small catalogues, otherwise queues a long background job.
 	Returns ``{"queued": bool, "total": int}``.
 	"""
 	frappe.only_for("System Manager")

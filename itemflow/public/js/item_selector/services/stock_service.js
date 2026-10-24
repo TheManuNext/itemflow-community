@@ -100,7 +100,7 @@ export class ItemSelectorStockService {
         }
     }
 
-    // Limpiar cache client-side
+    // Clear the client-side cache
     clearCache() {
         this.cache.clear();
     }

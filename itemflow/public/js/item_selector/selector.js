@@ -160,7 +160,7 @@ export class ItemSelectorPlus {
             this._showAddSummary(result, codes.length);
         } catch (e) {
             frappe.hide_progress();
-            this.config.debug('Error al agregar items:', e);
+            this.config.debug('Error adding items:', e);
             frappe.msgprint({
                 title: __('Error'),
                 message: __('Some items could not be added. Please check the console for details.'),
