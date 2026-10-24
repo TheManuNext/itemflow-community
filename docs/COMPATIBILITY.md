@@ -10,6 +10,7 @@ Supported versions, and how updates to Frappe/ERPNext are handled.
 |---|---|---|
 | Frappe Framework | **v16** (branch `version-16`) | One major version at a time. |
 | ERPNext | **v16** (branch `version-16`) | `required_apps = ["erpnext"]`. |
+| Interface | **ERPNext Desk** | Desk app: no Vue/frappe-ui front end and no website/portal routes. |
 | Python | **3.14** (`>=3.14,<3.15`) | Matches Frappe v16's own pin (`frappe/pyproject.toml`). |
 | MariaDB | tested with **11.8** | Database engine used in development and the reference production setup. |
 | Node.js | **24** | Only needed to build front-end assets (`bench build`). |

@@ -1,6 +1,6 @@
 # ItemFlow
 
-**A file-explorer-style item catalogue for ERPNext.**
+**A file-explorer-style item catalogue for the ERPNext Desk.**
 
 [![Licence: GPLv3](https://img.shields.io/badge/licence-GPLv3-blue.svg)](LICENSE)
 [![ERPNext v16](https://img.shields.io/badge/ERPNext-v16-0089FF.svg)](https://github.com/frappe/erpnext)
@@ -13,6 +13,26 @@ an Item Group tree on the left and a searchable item list with stock, UOM and
 pricing on the right. It adds an alternative way to find and add items from
 supported documents, without replacing the standard selector or ERPNext's
 business rules.
+
+## Where it runs
+
+ItemFlow is a **Frappe/ERPNext Desk app**, not a Frappe UI (Vue) single-page
+application. It has no website or portal routes.
+
+It extends the standard Desk in two places:
+
+| Surface | How it opens | Mode |
+|---|---|---|
+| Supported documents | **Advanced Search** or **Review Items** on the form opens the catalogue in a Desk modal | Add or edit document lines |
+| Inventory | The standard Desk Page `itemflow-inventory` ("Inventory") in the ItemFlow workspace | Read-only catalogue |
+
+The interface uses Frappe's Desk APIs (`frappe.ui`), jQuery and the Desk's
+Bootstrap 4.6 bundle. There is no Vue/frappe-ui front end, no separate web
+server and no website route; assets are built with `bench build`.
+
+> **Terminology:** "Desk" is ERPNext's back-office interface at `/app`.
+> "Frappe UI" is the separate Vue-based SPA framework used by apps such as CRM,
+> Helpdesk and Books. ItemFlow targets the Desk.
 
 ## Project status
 
@@ -28,12 +48,15 @@ vary.
 
 **It is:**
 
-- an additional item-selection interface for supported documents;
+- an additional item-selection interface for supported documents, opened from the Desk;
+- a read-only Inventory Desk Page for browsing the catalogue;
 - a way to browse by Item Group and see stock, UOM and prices before adding items;
 - configurable per site without code changes.
 
 **It is not:**
 
+- a Frappe UI (Vue) app or a standalone single-page application;
+- a website or portal feature; it requires Desk access;
 - a replacement for ERPNext's standard item selector;
 - a full inventory-management or stock-valuation screen;
 - an official Frappe/ERPNext app;
@@ -125,9 +148,9 @@ business; that is one real-world use case, not a benchmark or a guarantee.
 
 Screenshots use demo data.
 
-| Inventory page | Sales Order integration |
+| Inventory Desk Page | Sales Order integration |
 |---|---|
-| ![ItemFlow inventory page](docs/images/itemflow-community-inventory.png) | ![Sales Order with Advanced Search and Review Items](docs/images/itemflow-community-sales-order.png) |
+| ![ItemFlow inventory Desk Page](docs/images/itemflow-community-inventory.png) | ![Sales Order with Advanced Search and Review Items](docs/images/itemflow-community-sales-order.png) |
 
 ---
 
@@ -166,6 +189,8 @@ must comply with GPLv3. Internal use does not create that obligation.
 - Frappe Framework / ERPNext **v16**.
 - **Python 3.14** (required by Frappe v16; the app also uses Python 3.14 syntax).
 - **Node.js 24** for `bench build`.
+- Desk access for the users who will use the catalogue; the app adds no website
+  or portal routes.
 - MariaDB (tested with 11.8).
 - A standard bench with Redis and workers as required by Frappe.
 
@@ -235,7 +260,7 @@ requires Company and a target Warehouse.
 - Performance depends on permissions and on the volume of `Bin` and `Item Price`
   records on each site.
 - The interface is not a full inventory-management screen. The read-only
-  Inventory page is intended for quick consultation.
+  Inventory Desk Page is intended for quick consultation.
 
 ---
 
