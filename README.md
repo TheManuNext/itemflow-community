@@ -144,13 +144,35 @@ business; that is one real-world use case, not a benchmark or a guarantee.
 
 ---
 
+## Video walkthrough
+
+[![Watch the ItemFlow Community walkthrough](docs/images/itemflow-community-video.jpg)](https://vimeo.com/1239202750)
+
+A 2:30 tour of the catalogue, document integration, inventory, filters, dark theme and mobile.
+
+---
+
 ## Screenshots
 
-Screenshots use demo data.
+Screenshots use demo data (Aurora Supply Co., USD).
 
 | Inventory Desk Page | Sales Order integration |
 |---|---|
 | ![ItemFlow inventory Desk Page](docs/images/itemflow-community-inventory.png) | ![Sales Order with Advanced Search and Review Items](docs/images/itemflow-community-sales-order.png) |
+
+### Filters and dark theme
+
+| Brand filter | Dark theme |
+|---|---|
+| ![ItemFlow catalogue filtered by brand](docs/images/itemflow-community-filters.png) | ![ItemFlow inventory in dark theme](docs/images/itemflow-community-dark.png) |
+
+### Mobile
+
+<p align="center">
+  <img src="docs/images/itemflow-community-mobile.png" width="300" alt="ItemFlow catalogue on mobile opened from a Sales Order">
+</p>
+
+Mobile: catalogue opened from a Sales Order with **Advanced Search**; items already in the document are marked **In doc**.
 
 ---
 
