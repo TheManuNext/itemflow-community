@@ -148,7 +148,7 @@ business; that is one real-world use case, not a benchmark or a guarantee.
 
 [![Watch the ItemFlow Community walkthrough](docs/images/itemflow-community-video.jpg)](https://vimeo.com/1239202750)
 
-A 2:30 tour of the catalogue, document integration, inventory, filters, dark theme and mobile.
+A 2:30 tour of the catalogue, document integration, inventory, filters, and mobile.
 
 ---
 
@@ -317,8 +317,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 ## Licence
 
 GPLv3. See [LICENSE](LICENSE).
-
-Copyright © 2025–2026 TheManuNext.
 
 ItemFlow includes adapted code from ERPNext, which is also distributed under
 GPLv3. Portions of the code are adapted from ERPNext, © Frappe Technologies
