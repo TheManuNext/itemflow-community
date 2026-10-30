@@ -1255,9 +1255,7 @@ def get_inventory_context(company=None):
 
 	companies = _get_readable_companies()
 	requested = (company or "").strip() or None
-	default_company = (
-		frappe.defaults.get_user_default("Company") or frappe.db.get_default("company") or None
-	)
+	default_company = frappe.defaults.get_user_default("Company") or frappe.db.get_default("company") or None
 	selected = _resolve_context_company(requested, default_company, companies)
 
 	buying = False
@@ -1323,12 +1321,7 @@ def _resolve_context_warehouse(warehouse, company):
 		["company", "is_group", "disabled"],
 		as_dict=True,
 	)
-	if (
-		not row
-		or row.get("company") != company
-		or row.get("is_group")
-		or row.get("disabled")
-	):
+	if not row or row.get("company") != company or row.get("is_group") or row.get("disabled"):
 		return None
 
 	permitted = _get_permitted_warehouses()
