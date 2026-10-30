@@ -4,7 +4,7 @@
 
 [![Licence: GPLv3](https://img.shields.io/badge/licence-GPLv3-blue.svg)](LICENSE)
 [![ERPNext v16](https://img.shields.io/badge/ERPNext-v16-0089FF.svg)](https://github.com/frappe/erpnext)
-[![Version](https://img.shields.io/badge/version-2.8.1-green.svg)](https://github.com/TheManuNext/itemflow-community/releases/tag/v2.8.1)
+[![Version](https://img.shields.io/badge/version-2.8.2-green.svg)](https://github.com/TheManuNext/itemflow-community/releases/tag/v2.8.2)
 
 ![ItemFlow item catalogue with stock, prices and selection](docs/images/itemflow-community-catalogue.png)
 
@@ -24,7 +24,7 @@ It extends the standard Desk in two places:
 | Surface | How it opens | Mode |
 |---|---|---|
 | Supported documents | **Advanced Search** or **Review Items** on the form opens the catalogue in a Desk modal | Add or edit document lines |
-| Inventory | The standard Desk Page `itemflow-inventory` ("Inventory") in the ItemFlow workspace | Read-only catalogue |
+| Inventory | The standard Desk Page `itemflow-inventory` ("Inventory") in the ItemFlow workspace | Read-only catalogue with per-company stock |
 
 The interface uses Frappe's Desk APIs (`frappe.ui`), jQuery and the Desk's
 Bootstrap 4.6 bundle. There is no Vue/frappe-ui front end, no separate web
@@ -49,7 +49,8 @@ vary.
 **It is:**
 
 - an additional item-selection interface for supported documents, opened from the Desk;
-- a read-only Inventory Desk Page for browsing the catalogue;
+- a read-only Inventory Desk Page for browsing the catalogue, with a company
+  selector that scopes stock to the selected company;
 - a way to browse by Item Group and see stock, UOM and prices before adding items;
 - configurable per site without code changes.
 
@@ -64,7 +65,7 @@ vary.
 
 |  |  |
 |---|---|
-| **Version** | 2.8.1 |
+| **Version** | 2.8.2 |
 | **Frappe/ERPNext** | v16 (tested with 16.50 and 16.53/16.52; see [COMPATIBILITY](docs/COMPATIBILITY.md)) |
 | **Licence** | GPLv3 |
 | **Supported documents** | 9 doctypes |
@@ -110,6 +111,8 @@ business; that is one real-world use case, not a benchmark or a guarantee.
 - Available stock from `Bin`, with a configurable low-stock warning.
 - Standard price and multi-UOM support.
 - Quantities and totals visible before adding lines to the document.
+- Inventory page: select a company and see stock scoped to that company's
+  warehouses; stock is never aggregated across companies.
 
 ### Bulk selection
 
@@ -225,7 +228,7 @@ update policy.
 
 ```bash
 cd frappe-bench
-bench get-app https://github.com/TheManuNext/itemflow-community.git --branch v2.8.1
+bench get-app https://github.com/TheManuNext/itemflow-community.git --branch v2.8.2
 bench --site your-site install-app itemflow
 bench --site your-site migrate
 bench build --app itemflow
@@ -252,7 +255,7 @@ All common settings live in **ItemFlow Settings**:
 | `add_chunk_size` | Items added per batch | 10 |
 | `show_item_images` | Show `Item.image` | On |
 | `show_brand` | Show the brand in the grid | On |
-| `default_warehouse` | Warehouse used for stock | Empty |
+| `default_warehouse` | Default warehouse for stock; ignored when it belongs to another company | Empty |
 | `show_filter_brand` | Show the Brand filter | On |
 | `show_filter_stock_uom` | Show the Stock UOM filter | On |
 | `enable_<doctype>` | Enable the catalogue per document type | Per doctype |

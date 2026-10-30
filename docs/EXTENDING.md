@@ -117,7 +117,7 @@ keep both in the bench app manifest:
 	},
 	{
 		"url": "https://github.com/TheManuNext/itemflow-community.git",
-		"branch": "v2.8.1"
+		"branch": "v2.8.2"
 	},
 	{
 		"url": "https://github.com/your-org/acme-itemflow.git",
