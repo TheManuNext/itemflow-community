@@ -1229,35 +1229,113 @@ def rebuild_search_index():
 
 
 @frappe.whitelist(methods=["POST"])
-def get_inventory_context():
+def get_inventory_context(company=None):
 	"""Read-only context for the Inventory page (standalone catalogue).
 
-	Company and price list follow ERPNext's **standard** behaviour: the selling
-	price list is ``Selling Settings.selling_price_list`` (label *"Default Price
-	List"*) and the buying price list is ``Buying Settings.buying_price_list``.
-	ItemFlow does not add its own configuration here.
+	The Inventory page always works with **one** company so stock is never
+	aggregated across companies. The company is resolved in this order:
+
+	1. the explicit ``company`` argument (validated against User Permissions);
+	2. the user/global default company;
+	3. the first company the user can read.
+
+	The selling price list follows ERPNext's standard behaviour
+	(``Selling Settings.selling_price_list``); ItemFlow does not add its own
+	configuration here.
+
+	Args:
+	    company: Optional Company name selected by the user.
 
 	Returns:
-	    Dict with ``company``, ``price_list``, ``buying`` and ``warehouse``.
+	    Dict with ``company``, ``companies``, ``price_list``, ``buying`` and
+	    ``warehouse``. ``company`` is ``None`` only when the user cannot read any
+	    company; the page then shows an empty state without querying stock.
 	"""
 	frappe.has_permission("Item", ptype="read", throw=True)
 
+	companies = _get_readable_companies()
+	requested = (company or "").strip() or None
+	default_company = (
+		frappe.defaults.get_user_default("Company") or frappe.db.get_default("company") or None
+	)
+	selected = _resolve_context_company(requested, default_company, companies)
+
 	buying = False
-	company = frappe.defaults.get_user_default("Company") or frappe.db.get_default("company") or None
 	if buying:
 		price_list = frappe.db.get_single_value("Buying Settings", "buying_price_list") or None
 	else:
 		price_list = frappe.db.get_single_value("Selling Settings", "selling_price_list") or None
-	# Reuse the existing default_warehouse in Itemflow Settings (optional);
-	# empty => all warehouses permitted by User Permissions.
-	warehouse = frappe.db.get_single_value("Itemflow Settings", "default_warehouse") or None
+
+	# Reuse the existing default_warehouse in Itemflow Settings (optional), but
+	# only when it belongs to the selected company. Otherwise it is ignored and
+	# the stock query uses the selected company's warehouses.
+	configured_warehouse = frappe.db.get_single_value("Itemflow Settings", "default_warehouse") or None
+	warehouse = _resolve_context_warehouse(configured_warehouse, selected)
 
 	return {
-		"company": company,
+		"company": selected,
+		"companies": companies,
 		"price_list": price_list,
 		"buying": buying,
 		"warehouse": warehouse,
 	}
+
+
+def _get_readable_companies():
+	"""Non-group companies the current user can read, sorted by name."""
+	names = []
+	for row in frappe.get_all(
+		"Company",
+		filters={"is_group": 0},
+		fields=["name"],
+		order_by="name asc",
+		limit=0,
+	):
+		if frappe.has_permission("Company", ptype="read", doc=row.name):
+			names.append(row.name)
+	return names
+
+
+def _resolve_context_company(requested, default_company, companies):
+	"""Pick exactly one company for the Inventory context."""
+	if requested:
+		if requested not in companies:
+			frappe.throw(
+				_("You do not have permission for Company {0}").format(requested),
+				frappe.PermissionError,
+			)
+		return requested
+
+	if default_company and default_company in companies:
+		return default_company
+
+	return companies[0] if companies else None
+
+
+def _resolve_context_warehouse(warehouse, company):
+	"""Return the configured warehouse only if it is valid for ``company``."""
+	if not warehouse or not company:
+		return None
+
+	row = frappe.db.get_value(
+		"Warehouse",
+		warehouse,
+		["company", "is_group", "disabled"],
+		as_dict=True,
+	)
+	if (
+		not row
+		or row.get("company") != company
+		or row.get("is_group")
+		or row.get("disabled")
+	):
+		return None
+
+	permitted = _get_permitted_warehouses()
+	if permitted is not None and warehouse not in permitted:
+		return None
+
+	return warehouse
 
 
 def check_app_permission():

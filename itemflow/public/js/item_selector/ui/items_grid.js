@@ -71,12 +71,18 @@ export class ItemSelectorItemsGrid {
 	// Load items filtered by item groups (server-side pagination)
 	async renderCurrentPage() {
 		// Guard: if a render is already in flight (for example, a rapid pagination
-		// or toggle click), ignore the incoming call to avoid concurrent renders
-		// and race conditions.
-		if (this.state.rendering) return;
+		// or toggle click), queue a reload instead of dropping it. This matters
+		// when the company changes while the grid is loading.
+		if (this.state.rendering) {
+			this.state.reloadRequested = true;
+			return;
+		}
 		this.state.rendering = true;
 		try {
-			await this._renderCurrentPageInner();
+			do {
+				this.state.reloadRequested = false;
+				await this._renderCurrentPageInner();
+			} while (this.state.reloadRequested);
 		} finally {
 			this.state.rendering = false;
 		}
@@ -131,6 +137,11 @@ export class ItemSelectorItemsGrid {
 
 	_showError(container, e) {
 		return this.renderer._showError(container, e);
+	}
+
+	showNoCompanyMessage() {
+		const container = this.dialog.dialog.$wrapper.find("#items-container");
+		return this.dataLoader._showNoCompany(container);
 	}
 
 	updateTotals() {

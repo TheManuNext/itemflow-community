@@ -222,9 +222,14 @@ export class ItemsGridDataLoader {
 		}
 
 		const container = this.dialog.dialog.$wrapper.find("#items-container");
+		if (this.selector.mode === "view" && !this.selector.frm?.doc?.company) {
+			this._showNoCompany(container);
+			return;
+		}
 		this._showLoading(container);
 
 		try {
+			const version = this.state.contextVersion;
 			// frappe.xcall returns r.message directly (modern Frappe pattern)
 			const data = (await frappe.xcall("itemflow.api.get_items_by_group", {
 				item_groups: itemGroups,
@@ -242,6 +247,7 @@ export class ItemsGridDataLoader {
 				filters: this.state.filters,
 				doctype: this.selector.frm.doctype,
 			})) || { items: [], total: 0 };
+			if (version !== this.state.contextVersion) return;
 			// `total` may be null if COUNT exceeded the timeout (P3): in that
 			// case we use a lower bound that still allows pagination.
 			this.state.totalItems =
@@ -251,6 +257,7 @@ export class ItemsGridDataLoader {
 					  data.items.length +
 					  (data.items.length === this.state.perPage ? 1 : 0);
 			const { stockMap, priceMap } = await this._loadMetaForItems(data.items);
+			if (version !== this.state.contextVersion) return;
 			await this._renderItems(container, data.items, stockMap, priceMap);
 		} catch (e) {
 			this._showError(container, e);
@@ -298,9 +305,14 @@ export class ItemsGridDataLoader {
 		this.state.page = page;
 
 		const container = this.dialog.dialog.$wrapper.find("#items-container");
+		if (this.selector.mode === "view" && !this.selector.frm?.doc?.company) {
+			this._showNoCompany(container);
+			return;
+		}
 		this._showLoading(container);
 
 		try {
+			const version = this.state.contextVersion;
 			// frappe.xcall returns r.message directly (modern Frappe pattern)
 			const data = (await frappe.xcall("itemflow.api.get_items_by_search", {
 				search_term: searchTerm || "",
@@ -318,6 +330,7 @@ export class ItemsGridDataLoader {
 				filters: this.state.filters,
 				doctype: this.selector.frm.doctype,
 			})) || { items: [], total: 0 };
+			if (version !== this.state.contextVersion) return;
 			// `total` may be null if COUNT exceeded the timeout (P3): in that
 			// case we use a lower bound that still allows pagination.
 			this.state.totalItems =
@@ -327,10 +340,19 @@ export class ItemsGridDataLoader {
 					  data.items.length +
 					  (data.items.length === this.state.perPage ? 1 : 0);
 			const { stockMap, priceMap } = await this._loadMetaForItems(data.items);
+			if (version !== this.state.contextVersion) return;
 			await this._renderItems(container, data.items, stockMap, priceMap);
 		} catch (e) {
 			this._showError(container, e);
 		}
+	}
+
+	_showNoCompany(container) {
+		container.html(`
+			<div class="text-muted p-4">
+				<p class="mb-0">${__("Select a company to view its stock.")}</p>
+			</div>
+		`);
 	}
 
 	// Re-render the current page (used after selection changes)

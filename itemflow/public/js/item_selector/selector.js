@@ -28,6 +28,11 @@ export class ItemSelectorPlus {
         this._edit_original_codes = new Set();
         this.settings = null;
         this.config = new ItemSelectorConfig();
+        // `view` mode only: initial company and request token to discard
+        // out-of-order responses when the user switches companies quickly.
+        this._company_option = options.company || null;
+        this._companyRequestId = 0;
+        this.viewContext = null;
     }
 
     async init() {
@@ -39,7 +44,7 @@ export class ItemSelectorPlus {
             // context is built from ERPNext's standard singles
             // (Selling Settings / user defaults).
             if (this.mode === 'view' && !this.frm) {
-                await this._resolveViewContext();
+                await this._resolveViewContext(this._company_option);
             }
 
             this.stockService = new ItemSelectorStockService(this.frm);
@@ -71,14 +76,66 @@ export class ItemSelectorPlus {
         }
     }
 
-    async _resolveViewContext() {
-        const context = (await frappe.xcall('itemflow.api.get_inventory_context')) || {};
+    async _resolveViewContext(company = null) {
+        const context = (await frappe.xcall('itemflow.api.get_inventory_context', {
+            company: company || null,
+        })) || {};
+        this.viewContext = context;
         this.frm = makeViewContext({
             company: context.company || '',
             priceList: context.price_list || null,
             buying: !!context.buying,
             warehouse: context.warehouse || '',
         });
+    }
+
+    getCompany() {
+        return (this.frm && this.frm.doc && this.frm.doc.company) || '';
+    }
+
+    getCompanies() {
+        return (this.viewContext && this.viewContext.companies) || [];
+    }
+
+    async setCompany(company) {
+        if (this.mode !== 'view' || !this.frm || !this.frm.doc || !this.priceService) return null;
+
+        // Rapid company changes can resolve out of order: only the latest
+        // request is allowed to apply its context.
+        this._companyRequestId += 1;
+        const requestId = this._companyRequestId;
+
+        const context = (await frappe.xcall('itemflow.api.get_inventory_context', {
+            company: company || null,
+        })) || {};
+
+        if (requestId !== this._companyRequestId) return null;
+
+        const doc = this.frm.doc;
+        doc.company = context.company || '';
+        doc.selling_price_list = context.buying ? null : context.price_list || null;
+        doc.buying_price_list = context.buying ? context.price_list : null;
+        doc.set_warehouse = context.warehouse || '';
+
+        this.priceService.clearCache();
+        this.stockService.clearCache();
+        this.metaService.clearCache();
+
+        const grid = this.dialog && this.dialog.itemsGrid;
+        if (grid) {
+            grid.state.contextVersion += 1;
+            grid.state.page = 1;
+
+            if (!doc.company) {
+                grid.showNoCompanyMessage?.();
+            } else {
+                await grid.renderCurrentPage();
+                grid.updateTotals?.();
+            }
+        }
+
+        this.viewContext = context;
+        return context;
     }
 
     updateSelection(item_code, data) {

@@ -7,14 +7,18 @@
  */
 import { ItemSelectorPlus } from "./selector.js";
 
-export function mountInventoryPage(container) {
+export function mountInventoryPage(container, options = {}) {
 	if (!container) {
 		throw new Error("ItemFlow: a page container is required");
 	}
 
-	const selector = new ItemSelectorPlus(null, { mode: "view", container });
+	const selector = new ItemSelectorPlus(null, {
+		mode: "view",
+		container,
+		company: options.company || null,
+	});
 
-	selector.init().catch((e) => {
+	const ready = selector.init().catch((e) => {
 		console.error("[ItemFlow] Inventory page init failed", e);
 		frappe.msgprint({
 			title: __("Error"),
@@ -24,6 +28,17 @@ export function mountInventoryPage(container) {
 	});
 
 	return {
+		ready,
+		getCompany() {
+			return selector.getCompany();
+		},
+		getCompanies() {
+			return selector.getCompanies();
+		},
+		async setCompany(company) {
+			await ready;
+			return selector.setCompany(company);
+		},
 		refresh() {
 			return selector.dialog?.refreshAll?.();
 		},

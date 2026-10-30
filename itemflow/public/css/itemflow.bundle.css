@@ -148,6 +148,42 @@
     flex: 0 0 auto;
 }
 
+/* Dark theme: the pagination bar and Bootstrap page links must follow the
+   theme surface; otherwise the bar stays white while the grid is dark. */
+[data-theme="dark"] .item-selector-container .pagination-container {
+    background: var(--surface-gray-1);
+    border-top-color: var(--border-color);
+    color: var(--text-muted);
+}
+
+[data-theme="dark"] .item-selector-container .pagination-container .text-muted {
+    color: var(--text-muted) !important;
+}
+
+[data-theme="dark"] .item-selector-container .pagination .page-link {
+    background-color: var(--surface-base);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .item-selector-container .pagination .page-link:hover {
+    background-color: var(--surface-gray-2);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .item-selector-container .pagination .page-item.active .page-link {
+    background-color: var(--surface-gray-3);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .item-selector-container .pagination .page-item.disabled .page-link {
+    background-color: var(--surface-base);
+    border-color: var(--border-color);
+    color: var(--text-muted);
+}
+
 /* Clear selection button */
 .item-selector-container .clear-selection-btn {
     font-size: 0.85rem;
@@ -667,6 +703,49 @@
    The rest of the layout and the mobile responsive rules are already scoped to
    `.item-selector-container`.
    ========================================================================== */
+.itemflow-inventory-container {
+    width: 100%;
+}
+
+/* Company selector in the catalogue toolbar (read-only Inventory page).
+   The native Select control already provides the chevrons-up-down icon. */
+.search-bar-container .if-company-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.search-bar-container .if-company-filter-label {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.search-bar-container .if-company-control {
+    width: 210px;
+}
+
+.search-bar-container .if-company-control .frappe-control {
+    margin: 0;
+}
+
+.search-bar-container .if-company-control .form-control {
+    height: 30px;
+}
+
+@media (max-width: 991.98px) {
+    .search-bar-container .if-company-filter {
+        width: 100%;
+    }
+
+    .search-bar-container .if-company-control {
+        flex: 1;
+        width: auto;
+    }
+}
+
 .itemflow-inventory-page .item-selector-container {
     height: calc(100vh - 170px);
     overflow: hidden;
@@ -683,4 +762,12 @@
     .itemflow-inventory-page .item-selector-container {
         height: calc(100dvh - 150px);
     }
+}
+
+/* Icon-only Refresh on the read-only Inventory page */
+.search-bar-container .refresh-btn.if-refresh-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
 }

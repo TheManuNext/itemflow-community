@@ -148,6 +148,13 @@ export class ItemsGridRenderer {
 			})
 			.join("");
 
+		const companyContext =
+			isView && this.selector.getCompany()
+				? `<span class="text-muted small ml-2">· ${__("Stock for")} <strong>${frappe.utils.escape_html(
+						this.selector.getCompany()
+				  )}</strong></span>`
+				: "";
+
 		let contextBar = "";
 		if (this.state.mode === "doc") {
 			contextBar = `
@@ -166,6 +173,7 @@ export class ItemsGridRenderer {
                     <span class="fw-medium small">                    ${frappe.utils.escape_html(
 						this.state.label
 					)}</span>
+                    ${companyContext}
                     ${activeFilterBadges}
                     ${inStockToggle}
                 </div>`;
@@ -176,6 +184,7 @@ export class ItemsGridRenderer {
                     <span class="small text-muted">${__(
 						"Results for"
 					)} <strong>${frappe.utils.escape_html(this.state.search)}</strong></span>
+                    ${companyContext}
                     ${activeFilterBadges}
                     ${inStockToggle}
                 </div>`;
@@ -283,7 +292,13 @@ export class ItemsGridRenderer {
 								}"><div style="display:flex; align-items:center; gap:6px;"><span>${__(
 			"Stock"
 		)}</span><small class="text-muted fw-normal">${__("UOM")}</small></div></th>
-                                <th scope="col" style="width: 100px; padding-left: 8px;">${__("Order UOM")}</th>
+                                ${
+									isView
+										? ""
+										: `<th scope="col" style="width: 100px; padding-left: 8px;">${__(
+												"Order UOM"
+										  )}</th>`
+								}
                                 ${
 									!noPrice
 										? `<th scope="col" style="width: 12%">${__("Price")}</th>`
@@ -362,7 +377,7 @@ export class ItemsGridRenderer {
 				displayPrice = basePrice;
 			}
 
-			const uomSelect = this._renderUOMSelect(item.item_code, selectedUom);
+			const uomSelect = isView ? "" : this._renderUOMSelect(item.item_code, selectedUom);
 
 			// Combined discount + total cell (document mode with price only)
 			let discTotalCell = "";
@@ -463,7 +478,11 @@ export class ItemsGridRenderer {
                             ${stockBadge}
                         </div>
                     </td>
-                    <td data-label="${__("Order UOM")}" style="padding-left:8px;">${uomSelect}</td>
+                    ${
+						isView
+							? ""
+							: `<td data-label="${__("Order UOM")}" style="padding-left:8px;">${uomSelect}</td>`
+					}
                     ${
 						!noPrice
 							? `<td class="price-cell" data-label="${__("Price")}" data-base-price="${basePrice}" data-conversion-factor="${conversionFactor}">${

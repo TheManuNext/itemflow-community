@@ -15,11 +15,15 @@ frappe.pages["itemflow-inventory"].on_page_load = function (wrapper) {
 		return;
 	}
 
-	wrapper.itemflow_inventory = mount(page.main[0]);
+	// The catalogue replaces the contents of its container (`$root.html` in
+	// `_createInline`). Mount it in a child so future page-level content is not
+	// wiped when the catalogue finishes initialising.
+	const container = $('<div class="itemflow-inventory-container"></div>').appendTo(page.main);
+	wrapper.itemflow_inventory = mount(container[0]);
 };
 
 frappe.pages["itemflow-inventory"].refresh = function (wrapper) {
-	if (wrapper.itemflow_inventory) {
-		wrapper.itemflow_inventory.refresh();
-	}
+	const inventory = wrapper.itemflow_inventory;
+	if (!inventory) return;
+	return inventory.ready.then(() => inventory.refresh());
 };

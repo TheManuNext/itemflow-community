@@ -18,6 +18,11 @@ export class ItemsGridState {
 		this.restockOnly = false; // purchase toggle: Needs Restock
 		// Guard to avoid concurrent renders from rapid pagination or toggle clicks
 		this.rendering = false;
+		// Queued reload when a render is requested while another one is in flight
+		this.reloadRequested = false;
+		// Incremented when the catalogue context (company) changes so in-flight
+		// responses from the previous context are discarded.
+		this.contextVersion = 0;
 		// 'doc' mode (edit mode)
 		this.docItemsAll = []; // deduplicated list of frm.doc.items
 		this.docItemsFiltered = []; // after the local search filter

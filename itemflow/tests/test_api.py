@@ -2,6 +2,8 @@
 Tests for the ItemFlow API
 """
 
+from unittest.mock import patch
+
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
@@ -972,6 +974,108 @@ class TestItemSelectorAPI(FrappeTestCase):
 			self.assertIn(("Selling Settings", "selling_price_list"), seen)
 		finally:
 			frappe.db.get_single_value = original
+
+	def test_get_inventory_context_resolves_default_company(self):
+		"""Without an explicit company, the user default is used."""
+		from itemflow import api
+
+		with (
+			patch.object(api, "_get_readable_companies", return_value=["A", "B"]),
+			patch.object(frappe.defaults, "get_user_default", return_value="B"),
+			patch.object(api, "_resolve_context_warehouse", return_value=None),
+		):
+			result = api.get_inventory_context()
+
+		self.assertEqual(result["company"], "B")
+		self.assertEqual(result["companies"], ["A", "B"])
+
+	def test_get_inventory_context_falls_back_to_first_company(self):
+		"""Without a valid default, the first readable company is used."""
+		from itemflow import api
+
+		with (
+			patch.object(api, "_get_readable_companies", return_value=["A", "B"]),
+			patch.object(frappe.defaults, "get_user_default", return_value=None),
+			patch.object(frappe.db, "get_default", return_value=None),
+			patch.object(api, "_resolve_context_warehouse", return_value=None),
+		):
+			result = api.get_inventory_context()
+
+		self.assertEqual(result["company"], "A")
+
+	def test_get_inventory_context_explicit_company(self):
+		"""An explicit company is honoured when the user can read it."""
+		from itemflow import api
+
+		with (
+			patch.object(api, "_get_readable_companies", return_value=["A", "B"]),
+			patch.object(api, "_resolve_context_warehouse", return_value="W-B"),
+		):
+			result = api.get_inventory_context(company="B")
+
+		self.assertEqual(result["company"], "B")
+		self.assertEqual(result["warehouse"], "W-B")
+
+	def test_get_inventory_context_rejects_foreign_company(self):
+		"""A company outside User Permissions raises PermissionError."""
+		from itemflow import api
+
+		with patch.object(api, "_get_readable_companies", return_value=["A"]):
+			with self.assertRaises(frappe.PermissionError):
+				api.get_inventory_context(company="B")
+
+	def test_get_inventory_context_without_companies(self):
+		"""No readable company returns None and no warehouse."""
+		from itemflow import api
+
+		with (
+			patch.object(api, "_get_readable_companies", return_value=[]),
+			patch.object(frappe.defaults, "get_user_default", return_value=None),
+			patch.object(frappe.db, "get_default", return_value=None),
+		):
+			result = api.get_inventory_context()
+
+		self.assertIsNone(result["company"])
+		self.assertEqual(result["companies"], [])
+		self.assertIsNone(result["warehouse"])
+
+	def test_resolve_context_warehouse_validates_company(self):
+		"""The configured warehouse is only used for its own company."""
+		from itemflow import api
+
+		with (
+			patch.object(
+				frappe.db,
+				"get_value",
+				return_value={"company": "A", "is_group": 0, "disabled": 0},
+			),
+			patch.object(api, "_get_permitted_warehouses", return_value=None),
+		):
+			self.assertEqual(api._resolve_context_warehouse("W-A", "A"), "W-A")
+
+		with patch.object(
+			frappe.db,
+			"get_value",
+			return_value={"company": "B", "is_group": 0, "disabled": 0},
+		):
+			self.assertIsNone(api._resolve_context_warehouse("W-B", "A"))
+
+		with patch.object(
+			frappe.db,
+			"get_value",
+			return_value={"company": "A", "is_group": 1, "disabled": 0},
+		):
+			self.assertIsNone(api._resolve_context_warehouse("W-GROUP", "A"))
+
+		with (
+			patch.object(
+				frappe.db,
+				"get_value",
+				return_value={"company": "A", "is_group": 0, "disabled": 0},
+			),
+			patch.object(api, "_get_permitted_warehouses", return_value={"OTHER"}),
+		):
+			self.assertIsNone(api._resolve_context_warehouse("W-A", "A"))
 
 	@classmethod
 	def tearDownClass(cls):

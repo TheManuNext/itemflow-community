@@ -190,6 +190,7 @@ export class ItemSelectorDialog {
 		if (!isEdit) {
 			$w.find(".refresh-btn").off();
 			$w.find(".material-request-btn").off();
+			$w.find("#if-company-select").off();
 			$w.find(".tree-toggle-btn").off();
 			$w.find(".tree-restore-btn").off();
 			$w.find(".if-tree-open-btn").off();
@@ -228,6 +229,10 @@ export class ItemSelectorDialog {
 		const $actions = this.dialog.$wrapper.find("#catalog-toolbar-actions");
 		if (!$actions.length) return;
 
+		if (this.selector.mode === "view") {
+			this.addCompanyFilter($actions);
+		}
+
 		// The Material Request button does not apply to read-only mode (Inventory page).
 		if (this.selector.mode !== "view") {
 			const $materialRequestBtn = $(`
@@ -241,13 +246,70 @@ export class ItemSelectorDialog {
 			});
 		}
 
+		const isView = this.selector.mode === "view";
 		const $refreshBtn = $(`
-            <button class="btn btn-sm btn-secondary refresh-btn" type="button">
-                ${icon("refresh-cw", "sm")} ${__("Refresh")}
+            <button class="btn btn-sm btn-secondary refresh-btn${
+				isView ? " if-refresh-icon" : ""
+			}" type="button" title="${__("Refresh")}" aria-label="${__("Refresh")}">
+                ${icon("refresh-cw", "sm")}${isView ? "" : ` ${__("Refresh")}`}
             </button>
         `);
 		$actions.append($refreshBtn);
 		$refreshBtn.on("click", () => this.refreshAll());
+	}
+
+	// Read-only Inventory page: company selector in the catalogue toolbar.
+	// The option list comes from the backend, already filtered by permissions.
+	addCompanyFilter($actions) {
+		const companies = this.selector.getCompanies();
+		if (!companies.length) return;
+
+		const $group = $('<div class="if-company-filter"></div>');
+		const $label = $(
+			`<label class="if-company-filter-label" for="if-company-select">${__(
+				"Select Company"
+			)}</label>`
+		);
+		const $control = $('<div class="if-company-control"></div>').appendTo($group);
+
+		const control = frappe.ui.form.make_control({
+			df: {
+				fieldtype: "Select",
+				fieldname: "company",
+				options: companies,
+			},
+			parent: $control[0],
+			only_input: true,
+		});
+
+		control.refresh();
+		control.$input.attr("id", "if-company-select");
+		control.set_value(this.selector.getCompany());
+
+		control.df.change = async () => {
+			const company = control.get_value() || "";
+			if (company === this.selector.getCompany()) return;
+
+			try {
+				const context = await this.selector.setCompany(company);
+				if (!context) return;
+
+				const resolved = context.company || "";
+				if (resolved && resolved !== company) {
+					control.set_value(resolved);
+				}
+			} catch (e) {
+				frappe.msgprint({
+					title: __("Company"),
+					message: __("You do not have permission for this company."),
+					indicator: "red",
+				});
+				control.set_value(this.selector.getCompany() || "");
+			}
+		};
+
+		$group.prepend($label);
+		$actions.append($group);
 	}
 
 	addClearButton() {
