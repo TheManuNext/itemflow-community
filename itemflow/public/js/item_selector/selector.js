@@ -24,6 +24,9 @@ export class ItemSelectorPlus {
         this.frm = frm;
         this.mode = options.mode || 'add';
         this.container = options.container || null;
+        // Read-only search-only hosts (Item list modal) can turn prices off so
+        // the catalogue does not query Item Price and shows no Price column.
+        this.showPrices = options.showPrices !== false;
         this.selected_items = {};
         this._edit_original_codes = new Set();
         this.settings = null;
@@ -83,7 +86,7 @@ export class ItemSelectorPlus {
         this.viewContext = context;
         this.frm = makeViewContext({
             company: context.company || '',
-            priceList: context.price_list || null,
+            priceList: this.showPrices ? context.price_list || null : null,
             buying: !!context.buying,
             warehouse: context.warehouse || '',
         });
@@ -113,8 +116,10 @@ export class ItemSelectorPlus {
 
         const doc = this.frm.doc;
         doc.company = context.company || '';
-        doc.selling_price_list = context.buying ? null : context.price_list || null;
-        doc.buying_price_list = context.buying ? context.price_list : null;
+        doc.selling_price_list =
+            this.showPrices && !context.buying ? context.price_list || null : null;
+        doc.buying_price_list =
+            this.showPrices && context.buying ? context.price_list : null;
         doc.set_warehouse = context.warehouse || '';
 
         this.priceService.clearCache();

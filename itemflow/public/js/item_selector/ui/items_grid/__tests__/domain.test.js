@@ -11,6 +11,7 @@ import {
 	isNoPriceDoctype,
 	isRestockDoctype,
 	isStockItem,
+	pricesEnabled,
 } from "../domain.js";
 
 describe("domain helpers", () => {
@@ -25,6 +26,15 @@ describe("domain helpers", () => {
 		expect(isNoPriceDoctype("Material Request")).toBe(true);
 		expect(isNoPriceDoctype("Stock Entry")).toBe(true);
 		expect(isNoPriceDoctype("Sales Order")).toBe(false);
+	});
+
+	it("enables prices unless the host disables them or the doctype has none", () => {
+		expect(pricesEnabled("Sales Order")).toBe(true);
+		expect(pricesEnabled(null)).toBe(true);
+		expect(pricesEnabled("Sales Order", false)).toBe(false);
+		expect(pricesEnabled(null, false)).toBe(false);
+		expect(pricesEnabled("Material Request")).toBe(false);
+		expect(pricesEnabled("Material Request", false)).toBe(false);
 	});
 
 	it("resolves the effective warehouse per doctype", () => {

@@ -5,6 +5,7 @@
  * grid facade. Kept as a faithful extraction of the original methods.
  */
 import { totalPages as computeTotalPages } from "./pagination.js";
+import { pricesEnabled } from "./domain.js";
 import { icon } from "../icons.js";
 
 export class ItemsGridRenderer {
@@ -26,10 +27,6 @@ export class ItemsGridRenderer {
 
 	_isRestockDoctype() {
 		return this.grid._isRestockDoctype();
-	}
-
-	_isNoPriceDoctype() {
-		return this.grid._isNoPriceDoctype();
 	}
 
 	_isStockItem(item) {
@@ -108,7 +105,7 @@ export class ItemsGridRenderer {
 	async _renderItems(container, items, preloadedStockMap = null, preloadedPriceMap = null) {
 		// Context bar: built before the early return so it is included in the empty state
 		const isRestock = this._isRestockDoctype();
-		const noPrice = this._isNoPriceDoctype();
+		const noPrice = !pricesEnabled(this.selector.frm?.doctype, this.selector.showPrices);
 		const isEdit = this.selector.mode === "edit";
 		const isView = this.selector.mode === "view";
 		// In edit mode the stock toggles are not shown (they are server-side filters)
@@ -609,7 +606,7 @@ export class ItemsGridRenderer {
 	updateTotals() {
 		const selected = this.selector.selected_items;
 		const codes = Object.keys(selected);
-		const noPrice = this._isNoPriceDoctype();
+		const noPrice = !pricesEnabled(this.selector.frm?.doctype, this.selector.showPrices);
 
 		let totalQty = 0;
 		let totalAmount = 0;

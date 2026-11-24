@@ -4,7 +4,6 @@ import {
 	getConversionFactor,
 	getDefaultUom,
 	getUomInfo,
-	isNoPriceDoctype,
 	isRestockDoctype,
 	isStockItem,
 } from "./items_grid/domain.js";
@@ -26,10 +25,6 @@ export class ItemSelectorItemsGrid {
 
 	_isRestockDoctype() {
 		return isRestockDoctype(this.selector.frm.doctype);
-	}
-
-	_isNoPriceDoctype() {
-		return isNoPriceDoctype(this.selector.frm.doctype);
 	}
 
 	_isStockItem(item) {

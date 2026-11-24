@@ -21,6 +21,12 @@ export function isNoPriceDoctype(doctype) {
 	return doctype === "Material Request" || doctype === "Stock Entry";
 }
 
+// Whether the catalogue should render (and query) prices. Read-only hosts can
+// opt out with `showPrices: false` even when the doctype normally shows them.
+export function pricesEnabled(doctype, showPrices = true) {
+	return showPrices !== false && !isNoPriceDoctype(doctype);
+}
+
 // Effective document warehouse: Stock Entry uses to_warehouse (incoming)
 // instead of set_warehouse, which only exists on sales/purchase doctypes.
 export function effectiveWarehouse(doc, doctype) {
