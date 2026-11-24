@@ -414,14 +414,17 @@ export class ItemSelectorDialog {
 		const $w = this.dialog.$wrapper;
 		$w.find("#tree-sidebar-col").addClass("d-none");
 		$w.find("#tree-restore-col").addClass("d-flex").removeClass("d-none");
-		$w.find("#items-container").removeClass("col-8").addClass("col-12");
+		// Keep the items column flexible: the restore chevron is a sibling of
+		// auto width, so col-12 (100%) would push the grid past the row and clip
+		// the right-aligned stock toggle.
+		$w.find("#items-container").removeClass("col-8").addClass("col");
 	}
 
 	_expandTree() {
 		const $w = this.dialog.$wrapper;
 		$w.find("#tree-sidebar-col").removeClass("d-none");
 		$w.find("#tree-restore-col").removeClass("d-flex").addClass("d-none");
-		$w.find("#items-container").removeClass("col-12").addClass("col-8");
+		$w.find("#items-container").removeClass("col").addClass("col-8");
 	}
 
 	/* ---- Mobile mode: the category tree is presented as a drawer ---- */

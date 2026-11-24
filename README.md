@@ -4,7 +4,7 @@
 
 [![Licence: GPLv3](https://img.shields.io/badge/licence-GPLv3-blue.svg)](LICENSE)
 [![ERPNext v16](https://img.shields.io/badge/ERPNext-v16-0089FF.svg)](https://github.com/frappe/erpnext)
-[![Version](https://img.shields.io/badge/version-2.8.2-green.svg)](https://github.com/TheManuNext/itemflow-community/releases/tag/v2.8.2)
+[![Version](https://img.shields.io/badge/version-2.8.3-green.svg)](https://github.com/TheManuNext/itemflow-community/releases/tag/v2.8.3)
 
 ![ItemFlow item catalogue with stock, prices and selection](docs/images/itemflow-community-catalogue.png)
 
@@ -65,7 +65,7 @@ vary.
 
 |  |  |
 |---|---|
-| **Version** | 2.8.2 |
+| **Version** | 2.8.3 |
 | **Frappe/ERPNext** | v16 (tested with 16.50 and 16.53/16.52; see [COMPATIBILITY](docs/COMPATIBILITY.md)) |
 | **Licence** | GPLv3 |
 | **Supported documents** | 9 doctypes |
@@ -228,7 +228,7 @@ update policy.
 
 ```bash
 cd frappe-bench
-bench get-app https://github.com/TheManuNext/itemflow-community.git --branch v2.8.2
+bench get-app https://github.com/TheManuNext/itemflow-community.git --branch v2.8.3
 bench --site your-site install-app itemflow
 bench --site your-site migrate
 bench build --app itemflow
