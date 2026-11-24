@@ -26,7 +26,14 @@
 				frappe.msgprint(__("ItemFlow is still loading. Please try again."));
 				return;
 			}
-			new window.ItemSelectorPlus(null, { mode: "view", showPrices: false }).init();
+			new window.ItemSelectorPlus(null, {
+				mode: "view",
+				showPrices: false,
+				showStock: false,
+				showStockFilter: false,
+				showItemGroup: true,
+				showExtraColumns: false,
+			}).init();
 		});
 	};
 

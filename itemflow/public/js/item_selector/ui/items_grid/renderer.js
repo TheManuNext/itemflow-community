@@ -108,11 +108,15 @@ export class ItemsGridRenderer {
 		const noPrice = !pricesEnabled(this.selector.frm?.doctype, this.selector.showPrices);
 		const isEdit = this.selector.mode === "edit";
 		const isView = this.selector.mode === "view";
+		const showStock = this.selector.showStock !== false;
+		const showStockFilter = this.selector.showStockFilter !== false;
+		const showItemGroup = this.selector.showItemGroup === true;
 		// In edit mode the stock toggles are not shown (they are server-side filters)
-		const inStockToggle = isEdit
-			? ""
-			: isRestock
-			? `
+		const inStockToggle =
+			isEdit || !showStockFilter
+				? ""
+				: isRestock
+				? `
             <div style="display:flex; align-items:center; gap:6px; margin-left:auto;">
                 <input class="form-check-input" type="checkbox" id="restock-toggle" role="switch" ${
 					this.state.restockOnly ? "checked" : ""
@@ -121,7 +125,7 @@ export class ItemsGridRenderer {
                     ${__("Needs Restock")}
                 </label>
             </div>`
-			: `
+				: `
             <div style="display:flex; align-items:center; gap:6px; margin-left:auto;">
                 <input class="form-check-input" type="checkbox" id="in-stock-toggle" role="switch" ${
 					this.state.inStockOnly ? "checked" : ""
@@ -145,8 +149,9 @@ export class ItemsGridRenderer {
 			})
 			.join("");
 
+		const showStockContext = showStock || showStockFilter;
 		const companyContext =
-			isView && this.selector.getCompany()
+			isView && showStockContext && this.selector.getCompany()
 				? `<span class="text-muted small ml-2">· ${__("Stock for")} <strong>${frappe.utils.escape_html(
 						this.selector.getCompany()
 				  )}</strong></span>`
@@ -266,7 +271,10 @@ export class ItemsGridRenderer {
 			(settings.show_item_images !== undefined ? !!settings.show_item_images : true) &&
 			online;
 		const showBrand = settings.show_brand !== undefined ? !!settings.show_brand : true;
-		const columnFields = this.selector.config.getColumnFields();
+		const columnFields =
+			this.selector.showExtraColumns === false
+				? []
+				: this.selector.config.getColumnFields();
 
 		let html = `
             <div class="items-grid-wrapper" style="display: flex; flex-direction: column; height: 100%;">
@@ -284,11 +292,24 @@ export class ItemsGridRenderer {
 											)}</th>`
 									)
 									.join("")}
-                                <th scope="col" style="width: ${
-									noPrice ? "18%" : "12%"
-								}"><div style="display:flex; align-items:center; gap:6px;"><span>${__(
-			"Stock"
-		)}</span><small class="text-muted fw-normal">${__("UOM")}</small></div></th>
+                                ${
+									showStock
+										? `<th scope="col" style="width: ${
+												noPrice ? "18%" : "12%"
+										  }"><div style="display:flex; align-items:center; gap:6px;"><span>${__(
+												"Stock"
+										  )}</span><small class="text-muted fw-normal">${__(
+												"UOM"
+										  )}</small></div></th>`
+										: `<th scope="col" style="width: 10%">${__("UOM")}</th>`
+								}
+                                ${
+									showItemGroup
+										? `<th scope="col" style="width: 14%">${__(
+												"Item Group"
+										  )}</th>`
+										: ""
+								}
                                 ${
 									isView
 										? ""
@@ -473,15 +494,24 @@ export class ItemsGridRenderer {
 							)}</small></td>`;
 						})
 						.join("")}
-                    <td data-label="${__("Stock")}">
+                    ${
+						showStock
+							? `<td data-label="${__("Stock")}">
                         <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                            <span class="${stockClass}" style="font-weight:700;">${
-				stockDisplay
-			}</span>
+                            <span class="${stockClass}" style="font-weight:700;">${stockDisplay}</span>
                             <small class="text-muted">${safeStockUOM}</small>
                             ${stockBadge}
                         </div>
-                    </td>
+                    </td>`
+							: `<td data-label="${__("UOM")}"><small class="text-muted">${safeStockUOM}</small></td>`
+					}
+                    ${
+						showItemGroup
+							? `<td data-label="${__("Item Group")}"><small class="text-muted">${frappe.utils.escape_html(
+									item.item_group || ""
+							  )}</small></td>`
+							: ""
+					}
                     ${
 						isView
 							? ""

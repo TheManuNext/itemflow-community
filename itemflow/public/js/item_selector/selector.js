@@ -27,6 +27,12 @@ export class ItemSelectorPlus {
         // Read-only search-only hosts (Item list modal) can turn prices off so
         // the catalogue does not query Item Price and shows no Price column.
         this.showPrices = options.showPrices !== false;
+        // Compact search hosts can also hide the stock column and filter, and
+        // show the stock UOM and Item Group instead.
+        this.showStock = options.showStock !== false;
+        this.showStockFilter = options.showStockFilter !== false;
+        this.showItemGroup = options.showItemGroup === true;
+        this.showExtraColumns = options.showExtraColumns !== false;
         this.selected_items = {};
         this._edit_original_codes = new Set();
         this.settings = null;

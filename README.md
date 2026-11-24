@@ -4,7 +4,7 @@
 
 [![Licence: GPLv3](https://img.shields.io/badge/licence-GPLv3-blue.svg)](LICENSE)
 [![ERPNext v16](https://img.shields.io/badge/ERPNext-v16-0089FF.svg)](https://github.com/frappe/erpnext)
-[![Version](https://img.shields.io/badge/version-2.9.1-green.svg)](https://github.com/TheManuNext/itemflow-community/releases/tag/v2.9.1)
+[![Version](https://img.shields.io/badge/version-2.9.2-green.svg)](https://github.com/TheManuNext/itemflow-community/releases/tag/v2.9.2)
 
 ![ItemFlow item catalogue with stock, prices and selection](docs/images/itemflow-community-catalogue.png)
 
@@ -25,13 +25,14 @@ It extends the standard Desk in three places:
 |---|---|---|
 | Supported documents | **Advanced Search** or **Review Items** on the form opens the catalogue in a Desk modal | Add or edit document lines |
 | Inventory | The standard Desk Page `itemflow-inventory` ("Inventory") in the ItemFlow workspace | Read-only catalogue with per-company stock |
-| Item List | The **ItemFlow Catalogue** button in the Item list toolbar opens the catalogue in a modal | Read-only search without prices; item names open the Item form |
+| Item List | The **ItemFlow Catalogue** button in the Item list toolbar opens the catalogue in a modal | Read-only search: UOM and Item Group, no stock or prices; item names open the Item form |
 
-From the Item List, the modal reuses the same search, filters, company selector
-and stock as the Inventory page, but hides prices: it is intended to find an
-item and open its record. The Inventory page and document modals keep prices.
-It does not replace ERPNext's list view, so filters, bulk actions, imports and
-reports keep working as usual.
+From the Item List, the modal reuses the search and filters but is intentionally
+compact: it shows the stock UOM and Item Group, hides stock and prices, and
+keeps the company selector. It is intended to find an item and open its record.
+The Inventory page and document modals keep stock and prices. It does not
+replace ERPNext's list view, so filters, bulk actions, imports and reports keep
+working as usual.
 
 The interface uses Frappe's Desk APIs (`frappe.ui`), jQuery and the Desk's
 Bootstrap 4.6 bundle. There is no Vue/frappe-ui front end, no separate web
@@ -72,7 +73,7 @@ vary.
 
 |  |  |
 |---|---|
-| **Version** | 2.9.1 |
+| **Version** | 2.9.2 |
 | **Frappe/ERPNext** | v16 (tested with 16.50 and 16.60; see [COMPATIBILITY](docs/COMPATIBILITY.md)) |
 | **Licence** | GPLv3 |
 | **Supported documents** | 9 doctypes |
@@ -235,7 +236,7 @@ update policy.
 
 ```bash
 cd frappe-bench
-bench get-app https://github.com/TheManuNext/itemflow-community.git --branch v2.9.1
+bench get-app https://github.com/TheManuNext/itemflow-community.git --branch v2.9.2
 bench --site your-site install-app itemflow
 bench --site your-site migrate
 bench build --app itemflow

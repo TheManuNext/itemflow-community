@@ -273,6 +273,12 @@ export class ItemsGridDataLoader {
 		const priceMap = {};
 		if (codes.length === 0) return { stockMap, priceMap };
 
+		// Compact search hosts (Item list modal) show only UOM and Item Group:
+		// both come with the items list, so skip the stock/price/UOM call.
+		if (this.selector.showStock === false && this.selector.showPrices === false) {
+			return { stockMap, priceMap };
+		}
+
 		try {
 			const meta = await this.selector.metaService.getItemsMeta(codes);
 			codes.forEach((code) => {

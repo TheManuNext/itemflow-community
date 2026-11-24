@@ -123,4 +123,17 @@ describe("ItemsGridDataLoader - company wiring", () => {
 		expect(lastRender[3]).toEqual({ "ITEM-1": 9 });
 		expect(loader.state.uomsMap["ITEM-1"].stock_uom).toBe("Unit");
 	});
+
+	it("skips the meta call when stock and prices are disabled", async () => {
+		const loader = makeLoader();
+		loader.selector.showStock = false;
+		loader.selector.showPrices = false;
+
+		await loader.searchItems("lamp", 1);
+
+		expect(metaMock.getItemsMeta).not.toHaveBeenCalled();
+		const lastRender = renderCalls[renderCalls.length - 1];
+		expect(lastRender[2]).toEqual({});
+		expect(lastRender[3]).toEqual({});
+	});
 });
