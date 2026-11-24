@@ -37,6 +37,11 @@ doctype_js = {
 	"Stock Entry": "public/js/integrations/stock_entry.js",
 }
 
+# Doctype list view JS. Adds the "ItemFlow Catalogue" action to the Item list.
+doctype_list_js = {
+	"Item": "public/js/integrations/item_list.js",
+}
+
 # Itemflow Settings is not a fixture: it is created/seeded on install and
 # migrate, so per-site/company configuration is not overwritten on every
 # `bench migrate`.

@@ -47,6 +47,7 @@ export class ItemSelectorDialog {
 		}
 
 		const isEdit = this.selector.mode === "edit";
+		const isView = this.selector.mode === "view";
 
 		this.dialog = new frappe.ui.Dialog({
 			title: isEdit ? __("Document Items") : __("Item Catalogue"),
@@ -58,13 +59,17 @@ export class ItemSelectorDialog {
 					options: this.getTemplate(),
 				},
 			],
-			primary_action_label: isEdit ? __("Save Changes") : __("Add Selected Items"),
+			primary_action_label: isEdit
+				? __("Save Changes")
+				: isView
+				? __("Close")
+				: __("Add Selected Items"),
 			primary_action: () => {
 				// Mark the close as intentional so no confirmation is requested
 				this._intentional_close = true;
-				return isEdit
-					? this.selector.executeUpdate()
-					: this.selector.executeAddition();
+				if (isEdit) return this.selector.executeUpdate();
+				if (isView) return this.dialog.hide();
+				return this.selector.executeAddition();
 			},
 		});
 
@@ -314,7 +319,15 @@ export class ItemSelectorDialog {
 
 	addClearButton() {
 		const isEdit = this.selector.mode === "edit";
+		const isView = this.selector.mode === "view";
 		const $footer = this.dialog.$wrapper.find(".modal-footer");
+
+		// Read-only catalogue: there is no selection, so the footer only keeps
+		// the Close action; no Clear Selection button and no selection summary.
+		if (isView) {
+			$footer.css({ display: "flex", "justify-content": "flex-end", width: "100%" });
+			return;
+		}
 
 		// Footer: summary on the left, actions (Clear/Reset + primary) on the right.
 		$footer.css({ display: "flex", "align-items": "center", width: "100%" });

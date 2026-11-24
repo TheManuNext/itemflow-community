@@ -4,7 +4,7 @@
 
 [![Licence: GPLv3](https://img.shields.io/badge/licence-GPLv3-blue.svg)](LICENSE)
 [![ERPNext v16](https://img.shields.io/badge/ERPNext-v16-0089FF.svg)](https://github.com/frappe/erpnext)
-[![Version](https://img.shields.io/badge/version-2.8.3-green.svg)](https://github.com/TheManuNext/itemflow-community/releases/tag/v2.8.3)
+[![Version](https://img.shields.io/badge/version-2.9.0-green.svg)](https://github.com/TheManuNext/itemflow-community/releases/tag/v2.9.0)
 
 ![ItemFlow item catalogue with stock, prices and selection](docs/images/itemflow-community-catalogue.png)
 
@@ -19,12 +19,17 @@ business rules.
 ItemFlow is a **Frappe/ERPNext Desk app**, not a Frappe UI (Vue) single-page
 application. It has no website or portal routes.
 
-It extends the standard Desk in two places:
+It extends the standard Desk in three places:
 
 | Surface | How it opens | Mode |
 |---|---|---|
 | Supported documents | **Advanced Search** or **Review Items** on the form opens the catalogue in a Desk modal | Add or edit document lines |
 | Inventory | The standard Desk Page `itemflow-inventory` ("Inventory") in the ItemFlow workspace | Read-only catalogue with per-company stock |
+| Item List | The **ItemFlow Catalogue** button in the Item list toolbar opens the catalogue in a modal | Read-only search; item names open the Item form |
+
+From the Item List, the modal reuses the same search, filters, company selector,
+stock and prices as the Inventory page. It does not replace ERPNext's list view,
+so filters, bulk actions, imports and reports keep working as usual.
 
 The interface uses Frappe's Desk APIs (`frappe.ui`), jQuery and the Desk's
 Bootstrap 4.6 bundle. There is no Vue/frappe-ui front end, no separate web
@@ -65,8 +70,8 @@ vary.
 
 |  |  |
 |---|---|
-| **Version** | 2.8.3 |
-| **Frappe/ERPNext** | v16 (tested with 16.50 and 16.53/16.52; see [COMPATIBILITY](docs/COMPATIBILITY.md)) |
+| **Version** | 2.9.0 |
+| **Frappe/ERPNext** | v16 (tested with 16.50 and 16.60; see [COMPATIBILITY](docs/COMPATIBILITY.md)) |
 | **Licence** | GPLv3 |
 | **Supported documents** | 9 doctypes |
 | **Themes** | Light and dark |
@@ -228,7 +233,7 @@ update policy.
 
 ```bash
 cd frappe-bench
-bench get-app https://github.com/TheManuNext/itemflow-community.git --branch v2.8.3
+bench get-app https://github.com/TheManuNext/itemflow-community.git --branch v2.9.0
 bench --site your-site install-app itemflow
 bench --site your-site migrate
 bench build --app itemflow

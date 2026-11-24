@@ -331,6 +331,16 @@
     gap: 10px;
 }
 
+/* Read-only catalogue: item names link to the Item form */
+.item-selector-container .itemflow-item-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.item-selector-container .itemflow-item-link:hover {
+    text-decoration: underline;
+}
+
 /* First column: proportional padding in the header and cells */
 .item-selector-container .table th:first-child,
 .item-selector-container .table td:first-child {

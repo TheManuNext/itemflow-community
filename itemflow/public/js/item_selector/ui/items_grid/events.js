@@ -83,9 +83,21 @@ export class ItemsGridEvents {
 				self.renderCurrentPage();
 			});
 
-		// Read-only mode (Inventory page): toggles + pagination only; no
-		// selection, quantities or UOM changes.
+		// Read-only mode (Inventory page / Item list modal): toggles + pagination
+		// only; no selection, quantities or UOM changes. Item names open the
+		// item's form in the same tab (Cmd/Ctrl/Shift-click keeps the browser
+		// default so it can open in a new tab).
 		if (this.selector.mode === "view") {
+			container
+				.off("click", ".itemflow-item-link")
+				.on("click", ".itemflow-item-link", function (e) {
+					if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+					e.preventDefault();
+					const name = this.dataset.item;
+					if (!name) return;
+					self.dialog.hide();
+					frappe.set_route("Form", "Item", name);
+				});
 			this._bindPagination(container);
 			return;
 		}

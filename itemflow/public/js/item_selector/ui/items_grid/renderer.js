@@ -334,6 +334,13 @@ export class ItemsGridRenderer {
 
 			const safeCode = frappe.utils.escape_html(item.item_code);
 			const safeName = frappe.utils.escape_html(item.item_name);
+			// Read-only catalogue: the name opens the Item form in the same tab.
+			const nameHtml =
+				isView && item.name
+					? `<a href="/app/item/${encodeURIComponent(item.name)}" class="itemflow-item-link" data-item="${frappe.utils.escape_html(
+							item.name
+					  )}">${safeName}</a>`
+					: safeName;
 			const safeStockUOM = frappe.utils.escape_html(item.stock_uom || this._fallbackUom());
 
 			let stockClass = "";
@@ -447,7 +454,7 @@ export class ItemsGridRenderer {
 									: ""
 							}
                             <div>
-                                <div class="fw-medium">${safeName}${checkIcon}${inDocBadge}</div>
+                                <div class="fw-medium">${nameHtml}${checkIcon}${inDocBadge}</div>
                                 <small class="text-muted">${safeCode}</small>
                                 ${
 									showBrand && item.brand
